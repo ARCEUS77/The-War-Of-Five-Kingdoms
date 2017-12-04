@@ -25,4 +25,12 @@ public class Castles {
 		
 		return c;
 	}
+	public Castle getCastle(int i) {
+		return Castles[i];
+	}
+	
+	public int getCastleMoney(int i) {
+		return Castles[i].getMoney();
+	}
+	
 }

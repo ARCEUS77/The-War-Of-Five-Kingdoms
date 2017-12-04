@@ -49,4 +49,15 @@ public class Game {
 	public String teamName(int i) {
 		return Kingdoms.teamName(i);
 	}
+	public Castle getCastle(String castleName) {
+		return Castles.getCastle(castleName);
+	}
+	
+	public Castle getCastle(int i) {
+		return Castles.getCastle(i);
+	}
+	
+	public Kingdom getKingdom(int i) {
+		return Kingdoms.getKingdom(i);
+	}
 }

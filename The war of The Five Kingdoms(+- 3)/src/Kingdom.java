@@ -22,4 +22,6 @@ public class Kingdom {
 	public void conquerCastle(String castleName) {
 		Castles.conquerCastle(teamName, castleName);
 	}
+	
+	
 }

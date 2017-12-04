@@ -15,4 +15,8 @@ public class Kingdoms {
 	public String teamName(int i) {
 		return Kingdoms[i].getTeamName();
 	}
+	
+	public Kingdom getKingdom(int i) {
+		return Kingdoms[i];
+	}
 }

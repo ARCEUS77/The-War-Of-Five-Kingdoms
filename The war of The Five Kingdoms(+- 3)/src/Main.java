@@ -46,9 +46,10 @@ public class Main {
 		Scanner input = new Scanner(System.in);
 		Game G = null;
 		String cmd = "";
-		
+		System.out.println(Help(G));
 		while(!cmd.equals(LEAVE_CMD)) {
 			if(G == null) {
+				
 				cmd = readCommand(input,G); 
 				G = executeCommand(input,cmd,G);
 			}
@@ -65,7 +66,7 @@ public class Main {
 		if(G == null)
 			System.out.print(PROMPT);
 		else
-			System.out.print(G.teamName(0) + PROMPT);
+			System.out.print(G.teamName(0) + " " + PROMPT);
 		
 		String cmd = in.next().toLowerCase();
 		
@@ -133,10 +134,10 @@ public class Main {
 			helpmsg = NEW_GAME_CMD + " - Novo jogo" + "\n" + 
 					  SOLDIER_MOVE_CMD + " - Move o soldado" + "\n" + 
 					  RECRUIT_CMD + " - Recruta um soldado num castelo" + "\n" + 
-					  MAP_CMD + " - Lista todos os castelos do mapa, incluindo os abandonados, pela ordem de criacao no jogo e todos os reinos ainda em jogo, pela ordem de jogada" + 
+					  MAP_CMD + " - Lista todos os castelos do mapa, incluindo os abandonados, pela ordem de criacao no jogo e todos os reinos ainda em jogo, pela ordem de jogada" + "\n" +
 					  CASTLES_CMD + " - Lista os castelos do jogador activo, pela ordem pela qual foram conquistados" + "\n" + 
-					  ARMY_CMD + " -  Lista os soldados vivos do jogador activo, pela ordem de recrutamento" + "\n" + 
-					  KINGDOM_CMD + " -  Lista os varios reinos ainda em jogo, ordenados por nome do reino" + "\n" + 
+					  ARMY_CMD + " - Lista os soldados vivos do jogador activo, pela ordem de recrutamento" + "\n" + 
+					  KINGDOM_CMD + " - Lista os varios reinos ainda em jogo, ordenados por nome do reino" + "\n" + 
 					  HELP_CMD + " - Mostra a ajuda" + "\n" + 
 					  LEAVE_CMD + " - Termina a execucao do programa";
 		
@@ -158,25 +159,30 @@ public class Main {
 		
 		if(!validFirstLine(temp))
 			System.out.println(FATAL_ERROR_MSG);
+		else {
 		
 		System.out.println(nCastles + " castelos:");
 		
 		int counter = 0;
 		
 		while(counter < nCastles) {
-		temp.createCastle(in.nextInt(),in.nextInt(),in.nextInt(), in.nextLine());
-		counter++;
-		}
-		counter = 0;
+			temp.createCastle(in.nextInt(),in.nextInt(),in.nextInt(), in.nextLine());
+//			if(!validCastleCoord(in,temp.getCastle(counter),temp,counter));
+			counter++;
+			}
+			
+		
 		
 		System.out.println(nKingdoms + " reinos:");
 		
+		counter = 0;
 		while(counter < nKingdoms) {
 			temp.createKingdom(in.next(), in.nextLine());
 			counter++;
 		}
 		G = temp;
-		System.out.println(INITIAL_MSG + G.teamName(0));
+		System.out.println(INITIAL_MSG + G.teamName(0) + ".");
+		}
 		
 		return G;
 	}
@@ -203,9 +209,50 @@ public class Main {
 		
 	}
 	
-	private static void processCastleCreation(Scanner in, Game G, int nCastles) {
-		int nMaxCastles = G.getXMap()*G.getYMap();
+	private static boolean validCastleCoord(Castle temp, Game G, int index) {
+		boolean res = true;
+		if(index > 0) {
+			
+			
+				res = !(temp.getXCastle() < 1 || temp.getXCastle() > G.getXMap() ||
+						temp.getYCastle() < 1 || temp.getYCastle() > G.getYMap());
+			
+			for(int i = index; i > 0 || res; i--)
+			if(temp.getXCastle() == G.getCastle(i).getXCastle() ||
+				temp.getYCastle() == G.getCastle(i).getYCastle()) {
+					res = false;
+					System.out.println(INVALID_POS_CASTLE_MSG);
+			}
+			
+			else if(temp.getMoney() < 0) {
+				res = false;
+				System.out.println(INVALID_WEALTH_MSG);
+			}
+			
+			else if(temp.getCastleName().equals(G.getCastle(index).getCastleName())) {
+					res = false;
+					System.out.println(DUPLICATE_CASTLE_NAME_MSG);
+			}
+		}
 		
+	
+		return res;
+			
+	}
+	
+	private static boolean validKingdom(Kingdom temp, Game G, int index) {
+		boolean res = true;
+		if(index>0) {
+			index--;
+			for(int i = index; i>0; i--) {
+			if(temp.getTeamName().equals(G.getKingdom(i).getTeamName()))
+				res = false;
+			}
+//			if()
+			
+			
+			}
+		return res;
 	}
 	
 }

@@ -31,4 +31,8 @@ public class Castle {
 	public String castleTeam() {
 		return castleTeam;
 	}
+	
+	public int getMoney() {
+		return money;
+	}
 }
