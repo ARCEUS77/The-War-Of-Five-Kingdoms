@@ -200,12 +200,12 @@ public class Main {
 			int kingdomsMade = 0;
 			
 			while(counter < nKingdoms) {
-				String teamName = in.next();
+				String kingdomName = in.next();
 				String castleName = in.nextLine();
 				
-				if(validKingdom(teamName,castleName,temp,kingdomsMade)) {
-				temp.createKingdom(teamName);
-				temp.getKingdom(teamName).conquerCastle(castleName);
+				if(validKingdom(kingdomName,castleName,temp,kingdomsMade)) {
+				temp.createKingdom(kingdomName);
+				temp.conquerCastle(temp.getCastle(castleName),kingdomName);
 				kingdomsMade++;
 				}
 				counter++;
@@ -289,12 +289,12 @@ public class Main {
 		
 		if(index > 0) {
 			
-			for(int i = index-1; i >= 0 && res; i--) {
+			for(int i = index-1; i >= 0 || res; i--) {
 				if(kingdomName.equals(G.getKingdom(i).getKingdomName()))
 					res = false;
 			}
 			
-				for(int i = index-1; i >= 0 && res; i--)
+				for(int i = index-1; i >= 0 || res; i--)
 					if(castleName.equals(G.getKingdom(i).getConqueredCastleName(0))) {
 						res = false;
 						System.out.println(OCCUPIED_CASTLE_MSG);

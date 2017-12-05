@@ -13,8 +13,8 @@ public class Castles {
 		Castles[counter++] = new Castle(x,y,money,castleName);
 	}
 	
-	public void conquerCastle(String teamName,String castleName) {
-		getCastle(castleName).conquerCastle(teamName);
+	public void conquerCastle(String kingdomName,Castle castle) {
+		getCastle(castle.getCastleName()).conquerCastle(kingdomName);;
 	}
 	
 	public Castle getCastle(String castleName) {
