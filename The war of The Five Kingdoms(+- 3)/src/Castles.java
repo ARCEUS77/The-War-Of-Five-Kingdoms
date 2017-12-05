@@ -25,12 +25,20 @@ public class Castles {
 		
 		return c;
 	}
+	
 	public Castle getCastle(int i) {
 		return Castles[i];
 	}
 	
 	public int getCastleMoney(int i) {
 		return Castles[i].getMoney();
+	}
+	
+	public void deleteCastle(int i) {
+		for(int k = i; k < counter; k++)
+			Castles[k]=Castles[k+1];
+		
+		counter--;
 	}
 	
 }

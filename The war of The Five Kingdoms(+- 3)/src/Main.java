@@ -49,7 +49,6 @@ public class Main {
 		System.out.println(Help(G));
 		while(!cmd.equals(LEAVE_CMD)) {
 			if(G == null) {
-				
 				cmd = readCommand(input,G); 
 				G = executeCommand(input,cmd,G);
 			}
@@ -164,24 +163,39 @@ public class Main {
 		System.out.println(nCastles + " castelos:");
 		
 		int counter = 0;
+		int castlesMade = 0;
 		
 		while(counter < nCastles) {
-			temp.createCastle(in.nextInt(),in.nextInt(),in.nextInt(), in.nextLine());
-//			if(!validCastleCoord(in,temp.getCastle(counter),temp,counter));
+			int x =in.nextInt();
+			int y = in.nextInt();
+			int money =  in.nextInt();
+			String name = in.nextLine();
+			
+			if(validCastle(x,y,money,name,temp,castlesMade)) {
+				temp.createCastle(x,y,money,name);
+				castlesMade++;
+				}
 			counter++;
 			}
+		
+		if(castlesMade < nKingdoms) {
+			System.out.println(NOT_ENOUGH_CASTLES_MSG);
+			System.out.println(FATAL_ERROR_MSG);
+		}
+		else {
 			
 		
 		
-		System.out.println(nKingdoms + " reinos:");
+			System.out.println(nKingdoms + " reinos:");
 		
-		counter = 0;
-		while(counter < nKingdoms) {
-			temp.createKingdom(in.next(), in.nextLine());
-			counter++;
-		}
-		G = temp;
-		System.out.println(INITIAL_MSG + G.teamName(0) + ".");
+			counter = 0;
+			while(counter < nKingdoms) {
+				temp.createKingdom(in.next(), in.nextLine());
+				counter++;
+			}
+			G = temp;
+			System.out.println(INITIAL_MSG + G.teamName(0) + ".");
+			}
 		}
 		
 		return G;
@@ -209,34 +223,38 @@ public class Main {
 		
 	}
 	
-	private static boolean validCastleCoord(Castle temp, Game G, int index) {
+	private static boolean validCastle(int x, int y, int money, String name,Game G, int index) {
 		boolean res = true;
 		if(index > 0) {
+			index--;
 			
-			
-				res = !(temp.getXCastle() < 1 || temp.getXCastle() > G.getXMap() ||
-						temp.getYCastle() < 1 || temp.getYCastle() > G.getYMap());
-			
-			for(int i = index; i > 0 || res; i--)
-			if(temp.getXCastle() == G.getCastle(i).getXCastle() ||
-				temp.getYCastle() == G.getCastle(i).getYCastle()) {
+				if(x < 1 || x > G.getXMap() ||
+						y < 1 || y > G.getYMap()) { 
 					res = false;
 					System.out.println(INVALID_POS_CASTLE_MSG);
-			}
+				}
+				
+					for(int i = index; i >= 0 && res; i--) 
+						if(x == G.getCastle(i).getXCastle() &&
+							y == G.getCastle(i).getYCastle() && res) {
+							res = false;
+							System.out.println(INVALID_POS_CASTLE_MSG);
+						}
+				
+						if(money < 0 && res) {
+							res = false;
+							System.out.println(INVALID_WEALTH_MSG);
+				 	}
 			
-			else if(temp.getMoney() < 0) {
-				res = false;
-				System.out.println(INVALID_WEALTH_MSG);
-			}
-			
-			else if(temp.getCastleName().equals(G.getCastle(index).getCastleName())) {
-					res = false;
-					System.out.println(DUPLICATE_CASTLE_NAME_MSG);
-			}
-		}
+						if(name.equals(G.getCastle(index).getCastleName()) && res) {
+					 		res = false;
+							System.out.println(DUPLICATE_CASTLE_NAME_MSG);
+						}
+					}
+
 		
-	
 		return res;
+					
 			
 	}
 	
@@ -248,7 +266,7 @@ public class Main {
 			if(temp.getTeamName().equals(G.getKingdom(i).getTeamName()))
 				res = false;
 			}
-//			if()
+			
 			
 			
 			}

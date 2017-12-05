@@ -60,4 +60,8 @@ public class Game {
 	public Kingdom getKingdom(int i) {
 		return Kingdoms.getKingdom(i);
 	}
+	
+	public void deleteCastle(int i) {
+		Castles.deleteCastle(i);
+	}
 }
