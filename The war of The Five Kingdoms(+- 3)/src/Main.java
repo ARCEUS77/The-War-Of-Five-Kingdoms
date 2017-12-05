@@ -65,7 +65,7 @@ public class Main {
 		if(G == null)
 			System.out.print(PROMPT);
 		else
-			System.out.print(G.teamName(0) + " " + PROMPT);
+			System.out.print(G.kingdomName(0) + " " + PROMPT);
 		
 		String cmd = in.next().toLowerCase();
 		
@@ -204,8 +204,8 @@ public class Main {
 				String castleName = in.nextLine();
 				
 				if(validKingdom(teamName,castleName,temp,kingdomsMade)) {
-				temp.createKingdom(teamName,castleName);
-				temp.getKingdom(nKingdoms).conquerCastle(castleName);
+				temp.createKingdom(teamName);
+				temp.getKingdom(teamName).conquerCastle(castleName);
 				kingdomsMade++;
 				}
 				counter++;
@@ -217,7 +217,7 @@ public class Main {
 			}
 			else {	
 				G = temp;
-				System.out.println(INITIAL_MSG + G.teamName(0) + ".");
+				System.out.println(INITIAL_MSG + G.kingdomName(0) + ".");
 				}
 			}
 		}
@@ -290,7 +290,7 @@ public class Main {
 		if(index > 0) {
 			
 			for(int i = index-1; i >= 0 && res; i--) {
-				if(kingdomName.equals(G.getKingdom(i).getTeamName()))
+				if(kingdomName.equals(G.getKingdom(i).getKingdomName()))
 					res = false;
 			}
 			
@@ -299,8 +299,14 @@ public class Main {
 						res = false;
 						System.out.println(OCCUPIED_CASTLE_MSG);
 					}
-			}
+				
+					}
 		
+		if(G.getCastle(castleName) == null) {
+					res = false;
+					System.out.println(CASTLE_NON_EXISTANT_MSG);
+				}
+
 		return res;
 	}
 	

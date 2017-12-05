@@ -11,7 +11,7 @@ public class Kingdom {
 		Army = new Army(xmap,ymap);
 		Castles = new Castles(nCastles);
 	}
-	public String getTeamName() {
+	public String getKingdomName() {
 		return teamName;
 	}
 	

@@ -42,12 +42,12 @@ public class Game {
 		Castles.addCastles(x, y,money,castleName);
 	}
 	
-	public void createKingdom(String teamName,String castleName) {
+	public void createKingdom(String teamName) {
 		Kingdoms.addKindom(teamName, nCastles, xMap, yMap);
 	}
 	
-	public String teamName(int i) {
-		return Kingdoms.teamName(i);
+	public String kingdomName(int i) {
+		return Kingdoms.kingdomName(i);
 	}
 	public Castle getCastle(String castleName) {
 		return Castles.getCastle(castleName);
@@ -61,7 +61,8 @@ public class Game {
 		return Kingdoms.getKingdom(i);
 	}
 	
-	public void deleteCastle(int i) {
-		Castles.deleteCastle(i);
+	public Kingdom getKingdom(String KingdomName) {
+		return Kingdoms.getKingdom(KingdomName);
 	}
+	
 }

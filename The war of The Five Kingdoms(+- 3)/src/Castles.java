@@ -19,6 +19,7 @@ public class Castles {
 	
 	public Castle getCastle(String castleName) {
 		Castle c = null;
+		
 		for(int i = 0; i < counter; i++)
 			if(castleName.equals(Castles[i].getCastleName()))
 				c = Castles[i];
