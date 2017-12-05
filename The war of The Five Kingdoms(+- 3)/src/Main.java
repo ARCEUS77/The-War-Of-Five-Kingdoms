@@ -93,6 +93,9 @@ public class Main {
 		case HELP_CMD:System.out.println(Help(G));break;
 			
 		case LEAVE_CMD:break;
+		
+		default:
+			System.out.println(UNKNOWN_CMD);
 		}
 		
 		return G;
@@ -119,6 +122,9 @@ public class Main {
 		case HELP_CMD:System.out.println(Help(G));break;
 			
 		case LEAVE_CMD:break;
+		
+		default:
+			System.out.println(UNKNOWN_CMD);
 		}
 		return G;
 	}
@@ -147,6 +153,8 @@ public class Main {
 		if(G != null)
 			G = null;
 		
+		Game temp = null;
+		
 		int xmap = in.nextInt();
 		int ymap = in.nextInt();
 		int nKingdoms = in.nextInt();
@@ -154,7 +162,7 @@ public class Main {
 		
 		in.nextLine();
 		
-		Game temp =  new Game(xmap,ymap,nKingdoms,nCastles);
+		temp =  new Game(xmap,ymap,nKingdoms,nCastles);
 		
 		if(!validFirstLine(temp))
 			System.out.println(FATAL_ERROR_MSG);
@@ -166,7 +174,8 @@ public class Main {
 		int castlesMade = 0;
 		
 		while(counter < nCastles) {
-			int x =in.nextInt();
+			
+			int x = in.nextInt();
 			int y = in.nextInt();
 			int money =  in.nextInt();
 			String name = in.nextLine();
@@ -183,14 +192,16 @@ public class Main {
 			System.out.println(FATAL_ERROR_MSG);
 		}
 		else {
-			
-		
-		
+
 			System.out.println(nKingdoms + " reinos:");
 		
 			counter = 0;
+			
 			while(counter < nKingdoms) {
-				temp.createKingdom(in.next(), in.nextLine());
+				String teamName = in.next();
+				String castleName = in.nextLine();
+
+				temp.createKingdom(teamName,castleName);
 				counter++;
 			}
 			G = temp;
@@ -225,8 +236,6 @@ public class Main {
 	
 	private static boolean validCastle(int x, int y, int money, String name,Game G, int index) {
 		boolean res = true;
-		if(index > 0) {
-			index--;
 			
 				if(x < 1 || x > G.getXMap() ||
 						y < 1 || y > G.getYMap()) { 
@@ -234,24 +243,28 @@ public class Main {
 					System.out.println(INVALID_POS_CASTLE_MSG);
 				}
 				
-					for(int i = index; i >= 0 && res; i--) 
+				if(index > 0) {
+					
+					for(int i = index-1; i >= 0 && res; i--) 
 						if(x == G.getCastle(i).getXCastle() &&
 							y == G.getCastle(i).getYCastle() && res) {
 							res = false;
 							System.out.println(INVALID_POS_CASTLE_MSG);
 						}
+				}
 				
 						if(money < 0 && res) {
 							res = false;
 							System.out.println(INVALID_WEALTH_MSG);
 				 	}
-			
-						if(name.equals(G.getCastle(index).getCastleName()) && res) {
-					 		res = false;
-							System.out.println(DUPLICATE_CASTLE_NAME_MSG);
+						
+						for(int i = index-1; i >= 0 && res; i--) 
+							if(name.equals(G.getCastle(index-1).getCastleName()) && res) {
+								res = false;
+								System.out.println(DUPLICATE_CASTLE_NAME_MSG);
 						}
-					}
-
+					
+		
 		
 		return res;
 					
