@@ -19,4 +19,8 @@ public class Kingdoms {
 	public Kingdom getKingdom(int i) {
 		return Kingdoms[i];
 	}
+	
+	public String getConqueredCastleName(int kingdomIndex,int castleIndex) {
+		return Kingdoms[kingdomIndex].getConqueredCastleName(castleIndex);
+	}
 }

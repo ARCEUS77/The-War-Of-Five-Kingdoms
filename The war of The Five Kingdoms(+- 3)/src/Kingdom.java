@@ -23,5 +23,9 @@ public class Kingdom {
 		Castles.conquerCastle(teamName, castleName);
 	}
 	
+	public String getConqueredCastleName(int i) {
+		return Castles.getCastle(i).getCastleName();
+	}
+	
 	
 }

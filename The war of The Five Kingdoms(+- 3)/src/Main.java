@@ -29,7 +29,7 @@ public class Main {
 	public static final String DUPLICATE_KINGDOM_NAME_MSG = "Os reinos nao podem ter nomes duplicados";
 	public static final String OCCUPIED_CASTLE_MSG = "Castelo ja ocupado.";
 	public static final String CASTLE_NON_EXISTANT_MSG = "Castelo nao existe.";
-	public static final String NOT_ENOUGH_KINGDOM_MSG = "Numero insuficiente de reinos criados";
+	public static final String NOT_ENOUGH_KINGDOMS_MSG = "Numero insuficiente de reinos criados";
 	public static final String INITIAL_MSG = "Jogo iniciado, comeca o reino ";
 	public static final String FATAL_ERROR_MSG = "Erro fatal, jogo nao inicializado.";
 	public static final String NOT_OWNED_CASTLE_MSG = "(sem dono)";
@@ -197,15 +197,28 @@ public class Main {
 		
 			counter = 0;
 			
+			int kingdomsMade = 0;
+			
 			while(counter < nKingdoms) {
 				String teamName = in.next();
 				String castleName = in.nextLine();
-
+				
+				if(validKingdom(teamName,castleName,temp,kingdomsMade)) {
 				temp.createKingdom(teamName,castleName);
+				temp.getKingdom(nKingdoms).conquerCastle(castleName);
+				kingdomsMade++;
+				}
 				counter++;
 			}
-			G = temp;
-			System.out.println(INITIAL_MSG + G.teamName(0) + ".");
+			
+			if(kingdomsMade < 2) {
+				System.out.println(Main.NOT_ENOUGH_KINGDOMS_MSG);
+				System.out.println(FATAL_ERROR_MSG);
+			}
+			else {	
+				G = temp;
+				System.out.println(INITIAL_MSG + G.teamName(0) + ".");
+				}
 			}
 		}
 		
@@ -271,18 +284,23 @@ public class Main {
 			
 	}
 	
-	private static boolean validKingdom(Kingdom temp, Game G, int index) {
+	private static boolean validKingdom(String kingdomName, String castleName, Game G, int index) {
 		boolean res = true;
-		if(index>0) {
-			index--;
-			for(int i = index; i>0; i--) {
-			if(temp.getTeamName().equals(G.getKingdom(i).getTeamName()))
-				res = false;
+		
+		if(index > 0) {
+			
+			for(int i = index-1; i >= 0 && res; i--) {
+				if(kingdomName.equals(G.getKingdom(i).getTeamName()))
+					res = false;
 			}
 			
-			
-			
+				for(int i = index-1; i >= 0 && res; i--)
+					if(castleName.equals(G.getKingdom(i).getConqueredCastleName(0))) {
+						res = false;
+						System.out.println(OCCUPIED_CASTLE_MSG);
+					}
 			}
+		
 		return res;
 	}
 	
