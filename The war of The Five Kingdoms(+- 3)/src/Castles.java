@@ -14,13 +14,13 @@ public class Castles {
 	}
 	
 	public void conquerCastle(String kingdomName,String castleName) {
-		getCastle(castleName).conquerCastle(kingdomName);;
+		getCastle(castleName).conquerCastle(kingdomName);
 	}
 	
 	public Castle getCastle(String castleName) {
 		Castle c = null;
 		
-		for(int i = 0; i < counter; i++) {
+		for(int i = 0; i < counter && c == null; i++) {
 			if(Castles[i].getCastleName().equals(castleName))
 				c = Castles[i];
 		}

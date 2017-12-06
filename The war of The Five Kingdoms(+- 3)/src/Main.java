@@ -18,18 +18,7 @@ public class Main {
 	public static final String HELP_CMD = "ajuda";
 	public static final String LEAVE_CMD = "sai";
 	public static final String INACTIVE_MSG = "Comando inactivo.";
-	public static final String UNKNOWN_CMD = "Opcao inexistente."; 
-	public static final String MAP_TOO_SMALL_MSG = "Mapa pequeno demais para o jogo.";
-	public static final String INVALID_N_KINGDOMS_MSG = "Numero de reinos invalido.";
-	public static final String INVALID_N_CASTLES_MSG = "Numero de castelos invalido.";
-	public static final String INVALID_POS_CASTLE_MSG = "Castelo em posicao invalida.";
-	public static final String INVALID_WEALTH_MSG = "Castelo com riqueza invalida.";
-	public static final String DUPLICATE_CASTLE_NAME_MSG = "Os castelos nao podem ter nomes duplicados.";
-	public static final String NOT_ENOUGH_CASTLES_MSG = "Numero insuficiente de castelos criados.";
-	public static final String DUPLICATE_KINGDOM_NAME_MSG = "Os reinos nao podem ter nomes duplicados";
-	public static final String OCCUPIED_CASTLE_MSG = "Castelo ja ocupado.";
-	public static final String CASTLE_NON_EXISTANT_MSG = "Castelo nao existe.";
-	public static final String NOT_ENOUGH_KINGDOMS_MSG = "Numero insuficiente de reinos criados";
+	public static final String UNKNOWN_CMD = "Opcao inexistente.";
 	public static final String INITIAL_MSG = "Jogo iniciado, comeca o reino ";
 	public static final String FATAL_ERROR_MSG = "Erro fatal, jogo nao inicializado.";
 	public static final String NOT_OWNED_CASTLE_MSG = "(sem dono)";
@@ -153,8 +142,6 @@ public class Main {
 		if(G != null)
 			G = null;
 		
-		Game temp = null;
-		
 		int xmap = in.nextInt();
 		int ymap = in.nextInt();
 		int nKingdoms = in.nextInt();
@@ -162,12 +149,13 @@ public class Main {
 		
 		in.nextLine();
 		
-		temp =  new Game(xmap,ymap,nKingdoms,nCastles);
-		
-		if(!validFirstLine(temp))
+		if(!Game.validFirstLine(xmap,ymap,nKingdoms,nCastles).equals("")) {
+			System.out.println(Game.validFirstLine(xmap,ymap,nKingdoms,nCastles));
 			System.out.println(FATAL_ERROR_MSG);
+		}
 		else {
-		
+			
+		G =  new Game(xmap,ymap,nKingdoms,nCastles);
 		System.out.println(nCastles + " castelos:");
 		
 		int counter = 0;
@@ -179,16 +167,19 @@ public class Main {
 			int y = in.nextInt();
 			int money =  in.nextInt();
 			String name = in.nextLine();
+			name = name.substring(1);
 			
-			if(validCastle(x,y,money,name,temp,castlesMade)) {
-				temp.createCastle(x,y,money,name);
+			System.out.println(name);
+			
+			if(G.validCastle(x,y,money,name,castlesMade).equals("")) {
+				G.createCastle(x,y,money,name);
 				castlesMade++;
 				}
 			counter++;
 			}
 		
 		if(castlesMade < nKingdoms) {
-			System.out.println(NOT_ENOUGH_CASTLES_MSG);
+			System.out.println(Game.NOT_ENOUGH_CASTLES_MSG);
 			System.out.println(FATAL_ERROR_MSG);
 		}
 		else {
@@ -200,89 +191,35 @@ public class Main {
 			int kingdomsMade = 0;
 			
 			while(counter < nKingdoms) {
-				String kingdomName = in.next();
-				String castleName = in.next();
-				in.nextLine();
 				
-				if(validKingdom(kingdomName,castleName,temp,kingdomsMade)) {
-					temp.createKingdom(kingdomName);
-					temp.conquerCastle(castleName,kingdomName);
+				String kingdomName = in.next();
+				String castleName = in.nextLine();
+				castleName = castleName.substring(1);
+				
+				
+				
+				System.out.println(castleName);
+
+				if(validKingdom(kingdomName,castleName,G,kingdomsMade)) {
+					G.createKingdom(kingdomName);
+					G.getKingdom(kingdomsMade).conquerCastle(castleName);
 					kingdomsMade++;
 				}
 				counter++;
 			}
 			
 			if(kingdomsMade < 2) {
-				System.out.println(Main.NOT_ENOUGH_KINGDOMS_MSG);
+				System.out.println(Game.NOT_ENOUGH_KINGDOMS_MSG);
 				System.out.println(FATAL_ERROR_MSG);
 			}
 			else {	
-				G = temp;
+				
 				System.out.println(INITIAL_MSG + G.kingdomName(0) + ".");
 				}
 			}
 		}
 		
 		return G;
-	}
-	
-	private static boolean validFirstLine(Game temp) {
-		boolean res = true;
-		int maxCastles = temp.getXMap()*temp.getYMap();
-		
-		if(temp.getXMap() < Game.MINIMUM_MAP_X_Y || temp.getYMap() < Game.MINIMUM_MAP_X_Y) {
-			res = false;
-			System.out.println(MAP_TOO_SMALL_MSG);
-		}
-		
-		else if(temp.getNKingdoms() < Game.MINIMUM_KINGDOMS || temp.getNKingdoms() > Game.MAXIMUM_KINGDOMS) {
-				res = false;
-				System.out.println(INVALID_N_KINGDOMS_MSG);
-		}
-			else if(temp.getNCastles() > maxCastles || temp.getNCastles() < temp.getNKingdoms()) {
-					res = false;
-					System.out.println(INVALID_N_CASTLES_MSG);
-			}
-		
-		return res;
-		
-	}
-	
-	private static boolean validCastle(int x, int y, int money, String name,Game G, int index) {
-		boolean res = true;
-			
-				if(x < 1 || x > G.getXMap() ||
-						y < 1 || y > G.getYMap()) { 
-					res = false;
-					System.out.println(INVALID_POS_CASTLE_MSG);
-				}
-				
-				if(index > 0) {
-					
-					for(int i = index-1; i >= 0 && res; i--) 
-						if(x == G.getCastle(i).getXCastle() &&
-							y == G.getCastle(i).getYCastle() && res) {
-							res = false;
-							System.out.println(INVALID_POS_CASTLE_MSG);
-						}
-				}
-				
-						if(money < 0 && res) {
-							res = false;
-							System.out.println(INVALID_WEALTH_MSG);
-				 	}
-						
-						for(int i = index-1; i >= 0 && res; i--) 
-							if(name.equals(G.getCastle(index-1).getCastleName()) && res) {
-								res = false;
-								System.out.println(DUPLICATE_CASTLE_NAME_MSG);
-						}
-					
-		
-		
-		return res;
-					
-			
 	}
 	
 	private static boolean validKingdom(String kingdomName, String castleName, Game G, int index) {
@@ -298,14 +235,14 @@ public class Main {
 				for(int i = index-1; i >= 0 || res; i--)
 					if(castleName.equals(G.getKingdom(i).getConqueredCastleName(0))) {
 						res = false;
-						System.out.println(OCCUPIED_CASTLE_MSG);
+//						System.out.println(OCCUPIED_CASTLE_MSG);
 					}
 				
 					}
 		
 		if(G.getCastle(castleName) == null) {
 					res = false;
-					System.out.println(CASTLE_NON_EXISTANT_MSG);
+//					System.out.println(CASTLE_NON_EXISTANT_MSG);
 				}
 
 		return res;
