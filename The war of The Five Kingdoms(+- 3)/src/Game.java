@@ -65,7 +65,7 @@ public class Game {
 		return Kingdoms.getKingdom(KingdomName);
 	}
 	
-	public void conquerCastle(Castle castle, String kingdomName) {
-		Kingdoms.getKingdom(kingdomName).conquerCastle(castle);
+	public void conquerCastle(String castleName, String kingdomName) {
+		Kingdoms.getKingdom(kingdomName).conquerCastle(castleName);
 	}
 }

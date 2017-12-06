@@ -201,12 +201,13 @@ public class Main {
 			
 			while(counter < nKingdoms) {
 				String kingdomName = in.next();
-				String castleName = in.nextLine();
+				String castleName = in.next();
+				in.nextLine();
 				
 				if(validKingdom(kingdomName,castleName,temp,kingdomsMade)) {
-				temp.createKingdom(kingdomName);
-				temp.conquerCastle(temp.getCastle(castleName),kingdomName);
-				kingdomsMade++;
+					temp.createKingdom(kingdomName);
+					temp.conquerCastle(castleName,kingdomName);
+					kingdomsMade++;
 				}
 				counter++;
 			}
