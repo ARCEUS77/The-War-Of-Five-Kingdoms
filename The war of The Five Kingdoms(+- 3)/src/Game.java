@@ -8,12 +8,10 @@ public class Game {
 	public static final String INVALID_WEALTH_MSG = "Castelo com riqueza invalida.";
 	public static final String DUPLICATE_CASTLE_NAME_MSG = "Os castelos nao podem ter nomes duplicados.";
 	public static final String NOT_ENOUGH_CASTLES_MSG = "Numero insuficiente de castelos criados.";
-	public static final String DUPLICATE_KINGDOM_NAME_MSG = "Os reinos nao podem ter nomes duplicados";
+	public static final String DUPLICATE_KINGDOM_NAME_MSG = "Os reinos nao podem ter nomes duplicados.";
 	public static final String OCCUPIED_CASTLE_MSG = "Castelo ja ocupado.";
 	public static final String CASTLE_NON_EXISTANT_MSG = "Castelo nao existe.";
-	public static final String NOT_ENOUGH_KINGDOMS_MSG = "Numero insuficiente de reinos criados";
-	
-
+	public static final String NOT_ENOUGH_KINGDOMS_MSG = "Numero insuficiente de reinos criados.";
 	
 	public static final int MINIMUM_MAP_X_Y = 10;
 	public static final int MINIMUM_KINGDOMS = 2;
@@ -26,6 +24,12 @@ public class Game {
 	private int nKingdoms;
 	private int nCastles;
 	
+	/**
+	 * @param xMap
+	 * @param yMap
+	 * @param nKingdoms
+	 * @param nCastles
+	 */
 	public Game(int xMap, int yMap, int nKingdoms, int nCastles) {
 		this.xMap = xMap;
 		this.yMap = yMap;
@@ -37,6 +41,13 @@ public class Game {
 		this.nKingdoms = nKingdoms;
 	}
 	
+	/**
+	 * @param xMap
+	 * @param yMap
+	 * @param nKingdoms
+	 * @param nCastles
+	 * @return
+	 */
 	public static String validFirstLine(int xMap, int yMap, int nKingdoms, int nCastles) {
 		String res = "";
 		int maxCastles = xMap*yMap;
@@ -54,6 +65,14 @@ public class Game {
 		return res;
 	}
 	
+	/**
+	 * @param x
+	 * @param y
+	 * @param money
+	 * @param name
+	 * @param index
+	 * @return
+	 */
 	public String validCastle(int x, int y, int money, String name, int index) {
 		String res = "";
 			
@@ -83,50 +102,126 @@ public class Game {
 		return res;
 	}
 	
+	/**
+	 * @param kingdomName
+	 * @param castleName
+	 * @param G
+	 * @param index
+	 * @return
+	 */
+	public String validKingdom(String kingdomName, String castleName, Game G, int index) {
+		String res = "";
+		
+		if(index > 0) {
+			
+			for(int i = index-1; i >= 0; i--) 
+				if(kingdomName.equals(getKingdom(i).getKingdomName()) && res.equals(""))
+					res = DUPLICATE_KINGDOM_NAME_MSG;
+			
+			for(int i = index-1; i >= 0; i--)
+				if(castleName.equals(getKingdom(i).getConqueredCastleName(0)) && res.equals("")) 
+					res = OCCUPIED_CASTLE_MSG;
+					}
+		
+		if(getCastle(castleName) == null && res.equals("")) 
+					res = CASTLE_NON_EXISTANT_MSG;
+
+		return res;
+	}
+	
+	/**
+	 * @return
+	 */
 	public int getXMap() {
 		return xMap;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getYMap() {
 		return yMap;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getNKingdoms() {
 		return nKingdoms;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getNCastles() {
 		return nCastles;
 	}
 	
+	/**
+	 * @param x
+	 * @param y
+	 * @param money
+	 * @param castleName
+	 */
 	public void createCastle(int x, int y, int money, String castleName) {
 		Castles.addCastles(x, y,money,castleName);
 	}
 	
+	/**
+	 * @param teamName
+	 */
 	public void createKingdom(String teamName) {
 		Kingdoms.addKindom(teamName, nCastles, xMap, yMap);
 	}
 	
+	/**
+	 * @param i
+	 * @return
+	 */
 	public String kingdomName(int i) {
 		return Kingdoms.kingdomName(i);
 	}
+	
+	/**
+	 * @param castleName
+	 * @return
+	 * 			- Castelo que tem como nome a String castleName, null se nao existir tal castelo.
+	 */
 	public Castle getCastle(String castleName) {
 		return Castles.getCastle(castleName);
 	}
 	
+	/**
+	 * @param i
+	 * @return
+	 */
 	public Castle getCastle(int i) {
 		return Castles.getCastle(i);
 	}
 	
+	/**
+	 * @param i
+	 * @return
+	 */
 	public Kingdom getKingdom(int i) {
 		return Kingdoms.getKingdom(i);
 	}
 	
+	/**
+	 * @param KingdomName
+	 * @return
+	 */
 	public Kingdom getKingdom(String KingdomName) {
 		return Kingdoms.getKingdom(KingdomName);
 	}
 	
+	/**
+	 * @param castleName
+	 * @param kingdomName
+	 */
 	public void conquerCastle(String castleName, String kingdomName) {
-		Kingdoms.getKingdom(kingdomName).conquerCastle(castleName);
+		Castle C = getCastle(castleName);
+		
+		Kingdoms.getKingdom(kingdomName).conquerCastle(C);
 	}
 }

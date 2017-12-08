@@ -56,8 +56,11 @@ public class Main {
 		else
 			System.out.print(G.kingdomName(0) + " " + PROMPT);
 		
+		
 		String cmd = in.next().toLowerCase();
 		
+		
+		System.out.println(cmd);
 		return cmd;
 	}
 	
@@ -115,6 +118,7 @@ public class Main {
 		default:
 			System.out.println(UNKNOWN_CMD);
 		}
+		
 		return G;
 	}
 	
@@ -156,6 +160,7 @@ public class Main {
 		else {
 			
 		G =  new Game(xmap,ymap,nKingdoms,nCastles);
+		
 		System.out.println(nCastles + " castelos:");
 		
 		int counter = 0;
@@ -166,21 +171,23 @@ public class Main {
 			int x = in.nextInt();
 			int y = in.nextInt();
 			int money =  in.nextInt();
-			String name = in.nextLine();
-			name = name.substring(1);
-			
-			System.out.println(name);
+			String name = in.nextLine().substring(1);
 			
 			if(G.validCastle(x,y,money,name,castlesMade).equals("")) {
 				G.createCastle(x,y,money,name);
 				castlesMade++;
 				}
+			else 
+				System.out.println(G.validCastle(x,y,money,name,castlesMade));
+			
 			counter++;
 			}
 		
 		if(castlesMade < nKingdoms) {
+			G = null;
 			System.out.println(Game.NOT_ENOUGH_CASTLES_MSG);
 			System.out.println(FATAL_ERROR_MSG);
+			
 		}
 		else {
 
@@ -195,20 +202,20 @@ public class Main {
 				String kingdomName = in.next();
 				String castleName = in.nextLine();
 				castleName = castleName.substring(1);
-				
-				
-				
-				System.out.println(castleName);
 
-				if(validKingdom(kingdomName,castleName,G,kingdomsMade)) {
+				if(G.validKingdom(kingdomName,castleName,G,kingdomsMade).equals("")) {
 					G.createKingdom(kingdomName);
-					G.getKingdom(kingdomsMade).conquerCastle(castleName);
+					G.getKingdom(kingdomsMade).conquerCastle(G.getCastle(castleName));
 					kingdomsMade++;
 				}
+				else
+					System.out.println(G.validKingdom(kingdomName,castleName,G,kingdomsMade));
+				
 				counter++;
 			}
 			
 			if(kingdomsMade < 2) {
+				G = null;
 				System.out.println(Game.NOT_ENOUGH_KINGDOMS_MSG);
 				System.out.println(FATAL_ERROR_MSG);
 			}
@@ -220,32 +227,6 @@ public class Main {
 		}
 		
 		return G;
-	}
-	
-	private static boolean validKingdom(String kingdomName, String castleName, Game G, int index) {
-		boolean res = true;
-		
-		if(index > 0) {
-			
-			for(int i = index-1; i >= 0 || res; i--) {
-				if(kingdomName.equals(G.getKingdom(i).getKingdomName()))
-					res = false;
-			}
-			
-				for(int i = index-1; i >= 0 || res; i--)
-					if(castleName.equals(G.getKingdom(i).getConqueredCastleName(0))) {
-						res = false;
-//						System.out.println(OCCUPIED_CASTLE_MSG);
-					}
-				
-					}
-		
-		if(G.getCastle(castleName) == null) {
-					res = false;
-//					System.out.println(CASTLE_NON_EXISTANT_MSG);
-				}
-
-		return res;
 	}
 	
 }
