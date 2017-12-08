@@ -35,7 +35,9 @@ public class Main {
 		Scanner input = new Scanner(System.in);
 		Game G = null;
 		String cmd = "";
+		
 		System.out.println(Help(G));
+		
 		while(!cmd.equals(LEAVE_CMD)) {
 			if(G == null) {
 				cmd = readCommand(input,G); 
@@ -59,8 +61,6 @@ public class Main {
 		
 		String cmd = in.next().toLowerCase();
 		
-		
-		System.out.println(cmd);
 		return cmd;
 	}
 	
