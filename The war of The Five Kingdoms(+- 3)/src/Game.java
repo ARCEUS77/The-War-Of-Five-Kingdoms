@@ -41,6 +41,31 @@ public class Game {
 		this.nKingdoms = nKingdoms;
 	}
 	
+	public void resize(int nKingdoms, int nCastles, Game G) {
+		Kingdoms KingdomsTemp;
+		Castles CastlesTemp;
+		KingdomsTemp = new Kingdoms(nKingdoms,xMap,yMap);
+		CastlesTemp = new Castles(nCastles);
+		
+		for(int i = 0; i < nCastles; i++) {
+			Castle c = Castles.getCastle(i);
+			CastlesTemp.addCastles(c.getXCastle(), c.getYCastle(), c.getMoney(), c.getCastleName());
+		}
+			
+		
+		
+		for(int i = 0; i < nKingdoms; i++) {
+			Kingdom k =  Kingdoms.getKingdom(i);
+			KingdomsTemp.addKindom(k.getKingdomName(), nCastles, xMap, yMap);
+			KingdomsTemp.getKingdom(i).conquerCastle(getCastle(k.getConqueredCastleName(0)).getCastleName(),G);
+		}
+		Castles = CastlesTemp;
+		Kingdoms = KingdomsTemp;
+		
+		this.nCastles = nCastles;
+		this.nKingdoms = nKingdoms;
+		
+	}
 	/**
 	 * @param xMap
 	 * @param yMap
@@ -219,9 +244,10 @@ public class Game {
 	 * @param castleName
 	 * @param kingdomName
 	 */
-	public void conquerCastle(String castleName, String kingdomName) {
-		Castle C = getCastle(castleName);
-		
-		Kingdoms.getKingdom(kingdomName).conquerCastle(C);
+	public void conquerCastle(String castleName, String kingdomName,Game G) {
+	
+		Castles.conquerCastle(kingdomName,castleName);
+		Kingdoms.getKingdom(kingdomName).conquerCastle(castleName,G);
 	}
+	
 }

@@ -24,8 +24,12 @@ public class Castles {
 		Castles[counter++] = new Castle(x,y,money,castleName);
 	}
 	
-	public void conquerCastle(String kingdomName,Castle castle) {
-		castle.conquerCastle(kingdomName);
+	public void addCastles(Castle c) {
+		Castles[counter++] = c;
+	}
+	
+	public void conquerCastle(String kingdomName, String castleName) {
+		getCastle(castleName).conquerCastle(kingdomName);
 	}
 	
 	public Castle getCastle(int i) {

@@ -58,7 +58,6 @@ public class Main {
 		else
 			System.out.print(G.kingdomName(0) + " " + PROMPT);
 		
-		
 		String cmd = in.next().toLowerCase();
 		
 		return cmd;
@@ -68,7 +67,7 @@ public class Main {
 			
 		switch (cmd) {
 		
-		case NEW_GAME_CMD:G = processNewGame(in,G);break;
+		case NEW_GAME_CMD: G = processNewGame(in,G);break;
 		
 		case SOLDIER_MOVE_CMD:;
 		
@@ -80,9 +79,9 @@ public class Main {
 		
 		case ARMY_CMD:;
 		
-		case KINGDOM_CMD:System.out.println(INACTIVE_MSG);break;
+		case KINGDOM_CMD: System.out.println(INACTIVE_MSG);break;
 		
-		case HELP_CMD:System.out.println(Help(G));break;
+		case HELP_CMD: System.out.println(Help(G));break;
 			
 		case LEAVE_CMD:break;
 		
@@ -97,13 +96,13 @@ public class Main {
 		
 		switch(cmd) {
 		
-		case NEW_GAME_CMD:G = processNewGame(in,G);break;
+		case NEW_GAME_CMD: G = processNewGame(in,G);break;
 		
 		case SOLDIER_MOVE_CMD:break;
 		
 		case RECRUIT_CMD:break;
 		
-		case MAP_CMD:break;
+		case MAP_CMD: System.out.println(mapShow(G));break;
 		
 		case CASTLES_CMD:break;
 		
@@ -200,12 +199,11 @@ public class Main {
 			while(counter < nKingdoms) {
 				
 				String kingdomName = in.next();
-				String castleName = in.nextLine();
-				castleName = castleName.substring(1);
+				String castleName = in.nextLine().substring(1);
 
 				if(G.validKingdom(kingdomName,castleName,G,kingdomsMade).equals("")) {
 					G.createKingdom(kingdomName);
-					G.getKingdom(kingdomsMade).conquerCastle(G.getCastle(castleName));
+					G.conquerCastle(castleName, kingdomName,G);
 					kingdomsMade++;
 				}
 				else
@@ -220,13 +218,37 @@ public class Main {
 				System.out.println(FATAL_ERROR_MSG);
 			}
 			else {	
-				
+				G.resize(kingdomsMade, castlesMade,G);
 				System.out.println(INITIAL_MSG + G.kingdomName(0) + ".");
 				}
 			}
 		}
 		
 		return G;
+	}
+	
+	private static String mapShow(Game G) {
+		String msg;
+		
+		int xmap = G.getXMap();
+		int ymap = G.getYMap();
+		int nCastles = G.getNCastles();
+		int nKingdoms =  G.getNKingdoms();
+		
+		msg = xmap + " " + ymap + "\n" + 
+			nCastles + " castelos:" + "\n";
+		
+		for(int k = 0; k < nCastles; k++) {
+			msg += G.getCastle(k).getCastleName() + " (" + G.getCastle(k).getCastleKingdomName() + ")" + "\n";
+		}
+		
+		msg += nKingdoms + " reinos:" + "\n";
+		
+		for(int i = 0; i < nKingdoms; i++) {
+			msg += G.getKingdom(i).getKingdomName() + ";";
+		}
+		
+		return msg;
 	}
 	
 }

@@ -1,10 +1,11 @@
 
 public class Castle {
 
-	private Point c;
+	public static final String NO_OWNER = "sem dono";
 	
+	private Point c;
 	private String castleName;
-	private String castleTeam;
+	private String castleKingdomName;
 	private int money;
 	
 	
@@ -12,6 +13,8 @@ public class Castle {
 		c = new Point(xCastle,yCastle);
 		this.castleName = castleName;
 		this.money =  money;
+		castleKingdomName = NO_OWNER;
+		
 	}
 	
 	public int getXCastle() {
@@ -26,10 +29,10 @@ public class Castle {
 		return castleName;
 	}
 	public void conquerCastle(String team) {
-		castleTeam = team;
+		castleKingdomName = team;
 	}
-	public String castleTeam() {
-		return castleTeam;
+	public String getCastleKingdomName() {
+		return castleKingdomName;
 	}
 	
 	public int getMoney() {

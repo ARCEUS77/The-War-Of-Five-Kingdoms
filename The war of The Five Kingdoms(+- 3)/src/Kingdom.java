@@ -19,9 +19,9 @@ public class Kingdom {
 		Army.recruitSoldier(soldierType, castle,teamName);
 	}
 	
-	public void conquerCastle(Castle castle) {
-		Castles.addCastles(castle.getXCastle(), castle.getYCastle(), castle.getMoney(), castle.getCastleName());
-		Castles.conquerCastle(teamName,castle);
+	public void conquerCastle(String castleName,Game G) {
+		Castles.addCastles(G.getCastle(castleName));
+		Castles.conquerCastle(teamName,castleName);
 	}
 	
 	public String getConqueredCastleName(int i) {

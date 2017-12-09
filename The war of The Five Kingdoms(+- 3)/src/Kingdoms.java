@@ -32,4 +32,18 @@ public class Kingdoms {
 	public String getConqueredCastleName(int kingdomIndex,int castleIndex) {
 		return Kingdoms[kingdomIndex].getConqueredCastleName(castleIndex);
 	}
+	
+	private boolean greaterThan(String kingdomName, String other) {
+		return kingdomName.compareTo(other) > 0;
+	}
+	
+	public void bubbleSort(Game G) {
+		for(int i = 1; i < counter; i++)
+			for(int j = counter-1; j >= i; j--)
+				if(greaterThan(Kingdoms[i].getKingdomName(),Kingdoms[j].getKingdomName())) {
+					Kingdom temp = Kingdoms[j-1];
+					Kingdoms[j-1] = Kingdoms[j];
+					Kingdoms[j] = temp;
+				}
+	}
 }
