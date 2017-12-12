@@ -3,25 +3,25 @@ public class Kingdom {
 	
 	private Army Army;
 	private Castles Castles;
-	private String teamName;
+	private String kingdomName;
 	
-	public Kingdom(String teamName, int nCastles, int xmap, int ymap) {
-		this.teamName = teamName;
+	public Kingdom(String teamName, int nCastles) {
+		this.kingdomName = teamName;
 		
-		Army = new Army(xmap,ymap);
+		Army = new Army();
 		Castles = new Castles(nCastles);
 	}
 	public String getKingdomName() {
-		return teamName;
+		return kingdomName;
 	}
 	
 	public void recruitUnit(String soldierType, Castle castle) {
-		Army.recruitSoldier(soldierType, castle,teamName);
+		Army.recruitSoldier(soldierType, castle,kingdomName);
 	}
 	
-	public void conquerCastle(String castleName,Game G) {
-		Castles.addCastles(G.getCastle(castleName));
-		Castles.conquerCastle(teamName,castleName);
+	public void conquerCastle(Castle c) {
+		Castles.addCastles(c);
+		Castles.getCastle(c.getCastleName());
 	}
 	
 	public String getConqueredCastleName(int i) {

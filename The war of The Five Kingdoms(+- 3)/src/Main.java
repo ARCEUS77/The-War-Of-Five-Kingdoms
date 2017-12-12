@@ -7,28 +7,28 @@ public class Main {
 
 	}
 
-	public static final String PROMPT = "> ";
-	public static final String NEW_GAME_CMD = "novo";
-	public static final String SOLDIER_MOVE_CMD = "soldado";
-	public static final String RECRUIT_CMD = "recruta";
-	public static final String MAP_CMD = "mapa";
-	public static final String CASTLES_CMD = "castelos";
-	public static final String ARMY_CMD = "exercito";
-	public static final String KINGDOM_CMD = "reinos";
-	public static final String HELP_CMD = "ajuda";
-	public static final String LEAVE_CMD = "sai";
-	public static final String INACTIVE_MSG = "Comando inactivo.";
-	public static final String UNKNOWN_CMD = "Opcao inexistente.";
-	public static final String INITIAL_MSG = "Jogo iniciado, comeca o reino ";
-	public static final String FATAL_ERROR_MSG = "Erro fatal, jogo nao inicializado.";
-	public static final String NOT_OWNED_CASTLE_MSG = "(sem dono)";
-	public static final String NO_CASTLES_MSG = "Sem castelos.";
-	public static final String NO_ARMY_MSG = "Sem exercito.";
-	public static final String UNKNOWN_SOLDIER_TYPE_MSG = "Tipo de soldado inexistente.";
-	public static final String ILLEGAL_CASTLE_INVASION_MSG = "Castelo invadido ilegalmente.";
-	public static final String NO_MONEY_MSG = "Riqueza insuficiente para recrutamento.";
-	public static final String CASTLE_OCCUPIED_BY_SOLDIER_MSG = "Castelo nao livre.";
-	public static final String END_MSG = "Obrigado por jogar. Ate a proxima.";
+	private static final String PROMPT = "> ";
+	private static final String NEW_GAME_CMD = "novo";
+	private static final String SOLDIER_MOVE_CMD = "soldado";
+	private static final String RECRUIT_CMD = "recruta";
+	private static final String MAP_CMD = "mapa";
+	private static final String CASTLES_CMD = "castelos";
+	private static final String ARMY_CMD = "exercito";
+	private static final String KINGDOM_CMD = "reinos";
+	private static final String HELP_CMD = "ajuda";
+	private static final String LEAVE_CMD = "sai";
+	private static final String INACTIVE_MSG = "Comando inactivo.";
+	private static final String UNKNOWN_CMD = "Opcao inexistente.";
+	private static final String INITIAL_MSG = "Jogo iniciado, comeca o reino ";
+	private static final String FATAL_ERROR_MSG = "Erro fatal, jogo nao inicializado.";
+	private static final String NOT_OWNED_CASTLE_MSG = "(sem dono)";
+	private static final String NO_CASTLES_MSG = "Sem castelos.";
+	private static final String NO_ARMY_MSG = "Sem exercito.";
+	private static final String UNKNOWN_SOLDIER_TYPE_MSG = "Tipo de soldado inexistente.";
+	private static final String ILLEGAL_CASTLE_INVASION_MSG = "Castelo invadido ilegalmente.";
+	private static final String NO_MONEY_MSG = "Riqueza insuficiente para recrutamento.";
+	private static final String CASTLE_OCCUPIED_BY_SOLDIER_MSG = "Castelo nao livre.";
+	private static final String END_MSG = "Obrigado por jogar. Ate a proxima.";
 	
 	
 	private static void  startProgram() {
@@ -56,7 +56,7 @@ public class Main {
 		if(G == null)
 			System.out.print(PROMPT);
 		else
-			System.out.print(G.kingdomName(0) + " " + PROMPT);
+			System.out.print(G.getKingdomName(0) + " " + PROMPT);
 		
 		String cmd = in.next().toLowerCase();
 		
@@ -156,6 +156,7 @@ public class Main {
 			System.out.println(Game.validFirstLine(xmap,ymap,nKingdoms,nCastles));
 			System.out.println(FATAL_ERROR_MSG);
 		}
+		
 		else {
 			
 		G =  new Game(xmap,ymap,nKingdoms,nCastles);
@@ -170,7 +171,7 @@ public class Main {
 			int x = in.nextInt();
 			int y = in.nextInt();
 			int money =  in.nextInt();
-			String name = in.nextLine().substring(1);
+			String name = in.nextLine().trim();
 			
 			if(G.validCastle(x,y,money,name,castlesMade).equals("")) {
 				G.createCastle(x,y,money,name);
@@ -199,13 +200,15 @@ public class Main {
 			while(counter < nKingdoms) {
 				
 				String kingdomName = in.next();
-				String castleName = in.nextLine().substring(1);
+				String castleName = in.nextLine().trim();
+				
 
 				if(G.validKingdom(kingdomName,castleName,G,kingdomsMade).equals("")) {
 					G.createKingdom(kingdomName);
-					G.conquerCastle(castleName, kingdomName,G);
+					G.conquerCastle(castleName,kingdomName);
 					kingdomsMade++;
 				}
+				
 				else
 					System.out.println(G.validKingdom(kingdomName,castleName,G,kingdomsMade));
 				
@@ -219,36 +222,35 @@ public class Main {
 			}
 			else {	
 				G.resize(kingdomsMade, castlesMade,G);
-				System.out.println(INITIAL_MSG + G.kingdomName(0) + ".");
+				System.out.println(INITIAL_MSG + G.getKingdomName(0) + ".");
 				}
 			}
 		}
-		
 		return G;
 	}
 	
 	private static String mapShow(Game G) {
-		String msg;
+		String map;
 		
 		int xmap = G.getXMap();
 		int ymap = G.getYMap();
 		int nCastles = G.getNCastles();
 		int nKingdoms =  G.getNKingdoms();
 		
-		msg = xmap + " " + ymap + "\n" + 
+		map = xmap + " " + ymap + "\n" + 
 			nCastles + " castelos:" + "\n";
 		
 		for(int k = 0; k < nCastles; k++) {
-			msg += G.getCastle(k).getCastleName() + " (" + G.getCastle(k).getCastleKingdomName() + ")" + "\n";
+			map += G.getCastleName(k) + " (" + G.getCastleKingdomName(k) + ")" + "\n";
 		}
 		
-		msg += nKingdoms + " reinos:" + "\n";
+		map += nKingdoms + " reinos:" + "\n";
 		
 		for(int i = 0; i < nKingdoms; i++) {
-			msg += G.getKingdom(i).getKingdomName() + ";";
+			map += G.getKingdomName(i) + ";";
 		}
 		
-		return msg;
+		return map;
 	}
 	
 }

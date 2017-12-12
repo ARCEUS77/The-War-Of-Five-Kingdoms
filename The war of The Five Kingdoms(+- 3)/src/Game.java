@@ -1,4 +1,8 @@
 
+/**
+ * @author Tiago Kebas
+ *
+ */
 public class Game {
 
 	public static final String MAP_TOO_SMALL_MSG = "Mapa pequeno demais para o jogo.";
@@ -23,6 +27,7 @@ public class Game {
 	private Castles Castles;
 	private int nKingdoms;
 	private int nCastles;
+	private int currentElement;
 	
 	/**
 	 * @param xMap
@@ -34,37 +39,16 @@ public class Game {
 		this.xMap = xMap;
 		this.yMap = yMap;
 		
-		Kingdoms = new Kingdoms(nKingdoms,xMap,yMap);
+		Kingdoms = new Kingdoms(nKingdoms);
 		Castles = new Castles(nCastles);
 
 		this.nCastles = nCastles;
 		this.nKingdoms = nKingdoms;
+		currentElement = 0;
 	}
 	
-	public void resize(int nKingdoms, int nCastles, Game G) {
-		Kingdoms KingdomsTemp;
-		Castles CastlesTemp;
-		KingdomsTemp = new Kingdoms(nKingdoms,xMap,yMap);
-		CastlesTemp = new Castles(nCastles);
-		
-		for(int i = 0; i < nCastles; i++) {
-			Castle c = Castles.getCastle(i);
-			CastlesTemp.addCastles(c.getXCastle(), c.getYCastle(), c.getMoney(), c.getCastleName());
-		}
-			
-		
-		
-		for(int i = 0; i < nKingdoms; i++) {
-			Kingdom k =  Kingdoms.getKingdom(i);
-			KingdomsTemp.addKindom(k.getKingdomName(), nCastles, xMap, yMap);
-			KingdomsTemp.getKingdom(i).conquerCastle(getCastle(k.getConqueredCastleName(0)).getCastleName(),G);
-		}
-		Castles = CastlesTemp;
-		Kingdoms = KingdomsTemp;
-		
-		this.nCastles = nCastles;
-		this.nKingdoms = nKingdoms;
-		
+	public void initializeIterator() {
+		currentElement = 0;
 	}
 	/**
 	 * @param xMap
@@ -140,7 +124,7 @@ public class Game {
 		if(index > 0) {
 			
 			for(int i = index-1; i >= 0; i--) 
-				if(kingdomName.equals(getKingdom(i).getKingdomName()) && res.equals(""))
+				if(kingdomName.equals(getKingdomName(i)) && res.equals(""))
 					res = DUPLICATE_KINGDOM_NAME_MSG;
 			
 			for(int i = index-1; i >= 0; i--)
@@ -148,7 +132,7 @@ public class Game {
 					res = OCCUPIED_CASTLE_MSG;
 					}
 		
-		if(getCastle(castleName) == null && res.equals("")) 
+		if(Castles.getCastle(castleName) == null && res.equals("")) 
 					res = CASTLE_NON_EXISTANT_MSG;
 
 		return res;
@@ -196,58 +180,39 @@ public class Game {
 	 * @param teamName
 	 */
 	public void createKingdom(String teamName) {
-		Kingdoms.addKindom(teamName, nCastles, xMap, yMap);
+		Kingdoms.addKingdom(teamName, nCastles);
 	}
 	
 	/**
 	 * @param i
 	 * @return
 	 */
-	public String kingdomName(int i) {
-		return Kingdoms.kingdomName(i);
+	public String getKingdomName(int i) {
+		return Kingdoms.GetKingdomName(i);
 	}
 	
-	/**
-	 * @param castleName
-	 * @return
-	 * 			- Castelo que tem como nome a String castleName, null se nao existir tal castelo.
-	 */
-	public Castle getCastle(String castleName) {
-		return Castles.getCastle(castleName);
+	public String getCastleName(int i) {
+		return Castles.getCastleName(i);
 	}
 	
+	public String getCastleKingdomName(int i) {
+		
+	}
 	/**
 	 * @param i
 	 * @return
 	 */
-	public Castle getCastle(int i) {
-		return Castles.getCastle(i);
+	public Kingdom getKingdom(String kingdomName) {
+		return Kingdoms.getKingdom(kingdomName);
 	}
-	
-	/**
-	 * @param i
-	 * @return
-	 */
-	public Kingdom getKingdom(int i) {
-		return Kingdoms.getKingdom(i);
-	}
-	
-	/**
-	 * @param KingdomName
-	 * @return
-	 */
-	public Kingdom getKingdom(String KingdomName) {
-		return Kingdoms.getKingdom(KingdomName);
-	}
-	
+
 	/**
 	 * @param castleName
 	 * @param kingdomName
 	 */
-	public void conquerCastle(String castleName, String kingdomName,Game G) {
-	
-		Castles.conquerCastle(kingdomName,castleName);
-		Kingdoms.getKingdom(kingdomName).conquerCastle(castleName,G);
+	public void conquerCastle(String castleName, String kingdomName) {
+		Castles.conquerCastle(Castles.getCastleIndex(castleName),kingdomName);
+		Kingdoms.getKingdom(kingdomName).conquerCastle(Castles.getCastle(castleName));
 	}
 	
 }

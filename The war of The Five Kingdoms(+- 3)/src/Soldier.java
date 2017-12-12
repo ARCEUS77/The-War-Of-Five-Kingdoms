@@ -6,21 +6,17 @@ public class Soldier {
 	public static final String LANCER = "lanceiro";
 	
 	private String soldierType;
-	private Point soldierPos;
+	private Point soldierPoint;
 	private String Kingdom;
 	
 	public Soldier(String soldierType,Castle castle, String Kingdom) {
 		this.soldierType = soldierType;
-		soldierPos = new Point(castle.getXCastle(),castle.getYCastle());
+		soldierPoint = new Point(castle.getCastlePoint().getX(),castle.getCastlePoint().getY());
 		this.Kingdom =  Kingdom;
 	}
 	
-	public int getSoldierX() {
-		return soldierPos.getX();
-	}
-	
-	public int getSoldierY() {
-		return soldierPos.getX();
+	public Point getSoldierPoint() {
+		return soldierPoint;
 	}
 	
 	public String getSoldier() {

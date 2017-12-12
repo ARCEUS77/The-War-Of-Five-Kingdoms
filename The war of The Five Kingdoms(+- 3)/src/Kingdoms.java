@@ -4,29 +4,29 @@ public class Kingdoms {
 	private Kingdom[] Kingdoms;
 	private int counter;
 	
-	public Kingdoms(int nKingdoms, int xmap, int ymap) {
+	public Kingdoms(int nKingdoms) {
 		Kingdoms =  new Kingdom[nKingdoms];
 		counter = 0;
 	}
-	public void addKindom(String teamName, int nCastles, int xmap, int ymap) {
-		Kingdoms[counter++] =  new Kingdom(teamName,nCastles,xmap,ymap);
+	public void addKingdom(String teamName, int nCastles) {
+		Kingdoms[counter++] =  new Kingdom(teamName,nCastles);
 	}
 	
-	public String kingdomName(int i) {
+	public String GetKingdomName(int i) {
 		return Kingdoms[i].getKingdomName();
 	}
 	
-	public Kingdom getKingdom(int i) {
-		return Kingdoms[i];
+	private int searchKingdomIndex(String kingdomName) {
+		int res = -1;
+		for(int i = 0;i < counter;i++)
+			if(Kingdoms[i].getKingdomName().equals(kingdomName))
+				res = i;
+		
+		return res;
 	}
 	
 	public Kingdom getKingdom(String kingdomName) {
-		Kingdom res = null;
-		for(int i = 0; i < counter; i++)
-			if(Kingdoms[i].getKingdomName().equals(kingdomName))
-				res = Kingdoms[i];
-		
-		return res;
+		return Kingdoms[searchKingdomIndex(kingdomName)];
 	}
 	
 	public String getConqueredCastleName(int kingdomIndex,int castleIndex) {
