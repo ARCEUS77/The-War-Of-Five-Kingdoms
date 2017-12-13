@@ -5,7 +5,7 @@ public class Kingdom {
 	private Castles Castles;
 	private String kingdomName;
 	private int nOwnedCastles;
-	private int nSoldiers;
+
 	
 	public Kingdom(String teamName, int nCastles) {
 		this.kingdomName = teamName;
@@ -13,7 +13,7 @@ public class Kingdom {
 		Army = new Army();
 		Castles = new Castles(nCastles);
 		nOwnedCastles = 0;
-		nSoldiers = 0;
+
 	}
 	public String getKingdomName() {
 		return kingdomName;
@@ -21,7 +21,7 @@ public class Kingdom {
 	
 	public void recruitUnit(String soldierType, Castle castle) {
 		Army.recruitSoldier(soldierType, castle,kingdomName);
-		nSoldiers++;
+
 	}
 	
 	public void conquerCastle(Castle c) {
