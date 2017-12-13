@@ -33,4 +33,8 @@ public class Castle {
 	public int getMoney() {
 		return money;
 	}
+	
+	public void changeTurn() {
+		money++;
+	}
 }

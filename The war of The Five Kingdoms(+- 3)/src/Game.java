@@ -18,6 +18,15 @@ public class Game {
 	public static final int NOT_ENOUGH_KINGDOMS_ERROR_N = 11;
 	public static final int NO_ERRORS = 0;
 	
+	public static final int FIRST_KINGDOM_TURN = 0;
+	public static final int SECOND_KINGDOM_TURN = 1;
+	public static final int THIRD_KINGDOM_TURN = 2;
+	public static final int FOURTH_KINGDOM_TURN = 3;
+	public static final int FIFTH_KINGDOM_TURN = 4;
+	public static final int SIXTH_KINGDOM_TURN = 5;
+	public static final int SEVENTH_KINGDOM_TURN = 6;
+	public static final int EIGHTH_KINGDOM_TURN = 7;
+	
 	public static final int MINIMUM_MAP_X_Y = 10;
 	public static final int MINIMUM_KINGDOMS = 2;
 	public static final int MAXIMUM_KINGDOMS = 8;
@@ -27,6 +36,7 @@ public class Game {
 	private Point maximumMapPoint;
 	private int nKingdoms;
 	private int nCastles;
+	private int currentKingdomTurn;
 	
 	/**
 	 * @param xMap
@@ -42,6 +52,7 @@ public class Game {
 
 		this.nCastles = nCastles;
 		this.nKingdoms = nKingdoms;
+		currentKingdomTurn = FIRST_KINGDOM_TURN;
 	}
 	
 	public void updateNCastlesNKingdoms(int nCastles, int nKingdoms) {
@@ -198,7 +209,24 @@ public class Game {
 	public void addCastleToKingdom(String kingdomName, String castleName) {
 		Castles.conquerCastle(castleName,kingdomName);
 		Kingdoms.getKingdom(kingdomName).conquerCastle(Castles.getCastle(castleName));
+	}
+	
+	public void swapTurn() {
+		if(currentKingdomTurn == nKingdoms-1)
+			currentKingdomTurn= FIRST_KINGDOM_TURN;
+		else
+			currentKingdomTurn++;
 		
+		Castles.SwapTurn();
 		
 	}
+	
+	public int currentTurn() {
+		return currentKingdomTurn;
+	}
+	
+	public int nOwnedCastles(int Kingdom) {
+		return Kingdoms.getKingdom(Kingdom).nOwnedCastles();
+	}
+		
 }

@@ -32,7 +32,6 @@ public class Main {
 	private static final String OCCUPIED_CASTLE_MSG = "Castelo ja ocupado.";
 	private static final String CASTLE_NON_EXISTANT_MSG = "Castelo nao existe.";
 	private static final String NOT_ENOUGH_KINGDOMS_MSG = "Numero insuficiente de reinos criados.";
-	private static final String NOT_OWNED_CASTLE_MSG = "(sem dono)";
 	private static final String NO_CASTLES_MSG = "Sem castelos.";
 	private static final String NO_ARMY_MSG = "Sem exercito.";
 	private static final String UNKNOWN_SOLDIER_TYPE_MSG = "Tipo de soldado inexistente.";
@@ -113,9 +112,9 @@ public class Main {
 		
 		case RECRUIT_CMD:break;
 		
-		case MAP_CMD: System.out.println(mapShow(G));break;
+		case MAP_CMD: System.out.println(showMap(G));break;
 		
-		case CASTLES_CMD:break;
+		case CASTLES_CMD:System.out.println(showCastles(G));break;
 		
 		case ARMY_CMD:break;
 		
@@ -133,7 +132,7 @@ public class Main {
 	}
 	
 	private static void printErrorMsg(int error) {
-		String msg = "nothing";
+		String msg = "";
 		switch(error) {
 		
 		case Game.CASTLE_NON_EXISTANT_ERROR_N:
@@ -282,7 +281,7 @@ public class Main {
 		return G;
 	}
 	
-	private static String mapShow(Game G) {
+	private static String showMap(Game G) {
 		String map;
 		
 		int xmap = G.getMaximumMapPoint().getX();
@@ -307,6 +306,19 @@ public class Main {
 		}
 		
 		return map;
+	}
+	
+	private static String showCastles(Game G) {
+		Kingdom K = G.getKingdom(G.getKingdomName(G.currentTurn()));
+		int nCastlesOwned = K.nOwnedCastles();
+		System.out.println(nCastlesOwned + " castelos:");
+		String msg = "";
+		
+		for(int i = 0; i < nCastlesOwned; i++) 
+			msg += K.getConqueredCastleName(i) + " com riqueza " + K.getCastle(i).getMoney() + 
+					" na posicao (" + K.getCastle(i).getCastlePoint().getX() + "," + K.getCastle(i).getCastlePoint().getY() + ")";
+		
+		return msg;
 	}
 	
 }
