@@ -28,7 +28,15 @@ public class Castles {
 	}
 	
 	public Castle getCastle(String castleName) {
-		return Castles[searchCastleIndex(castleName)];
+		Castle c = null;
+		int index = searchCastleIndex(castleName);
+		
+		if(index == -1)
+			c =  null;
+		else
+			c = Castles[index];
+		
+		return c;
 	}
 	
 	public Castle getCastle(int i) {
