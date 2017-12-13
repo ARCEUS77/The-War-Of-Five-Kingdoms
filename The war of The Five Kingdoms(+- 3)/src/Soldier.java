@@ -19,7 +19,7 @@ public class Soldier {
 		return soldierPoint;
 	}
 	
-	public String getSoldier() {
+	public String getSoldierType() {
 		return soldierType;
 	}
 	

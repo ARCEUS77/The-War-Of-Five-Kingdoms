@@ -226,7 +226,7 @@ public class Game {
 	}
 	
 	public int nOwnedCastles(int Kingdom) {
-		return Kingdoms.getKingdom(Kingdom).nOwnedCastles();
+		return Kingdoms.getKingdom(Kingdom).getNOwnedCastles();
 	}
 		
 }

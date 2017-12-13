@@ -18,15 +18,22 @@ public class Army {
 		Army = tmp;
 	}
 	
+	public Soldier getSoldier(int i) {
+		return Army[i];
+	}
+	
 	private boolean isFull() {
 		return counter==Army.length;
 	}
 	
 	public void recruitSoldier(String soldierType, Castle castle, String Kingdomname) {
-		
 		if(isFull())
 			resize();
 		
 		Army[counter] = new Soldier(soldierType,castle,Kingdomname);
+	}
+	
+	public int getNSoldiers() {
+		return counter;
 	}
 }
