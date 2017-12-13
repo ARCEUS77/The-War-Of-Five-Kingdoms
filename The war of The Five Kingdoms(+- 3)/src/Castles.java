@@ -19,8 +19,8 @@ public class Castles {
 		Castles[counter++] = c;
 	}
 	
-	public void conquerCastle(int i, String kingdomName) {
-		Castles[i].conquerCastle(kingdomName);
+	public void conquerCastle(String castleName, String kingdomName) {
+		Castles[searchCastleIndex(castleName)].conquerCastle(kingdomName);
 	}
 	
 	public void initializeCastleIterator() {
@@ -31,8 +31,8 @@ public class Castles {
 		return Castles[searchCastleIndex(castleName)];
 	}
 	
-	public String getCastleName(int i) {
-		return Castles[i].getCastleName();
+	public Castle getCastle(int i) {
+		return Castles[i];
 	}
 	
 	private int searchCastleIndex(String castleName) {
@@ -42,6 +42,9 @@ public class Castles {
 				res = i;
 		
 		return res;
+	}
+	public String getCastleName(int i) {
+		return Castles[i].getCastleName();
 	}
 	
 	public int getCastleMoney(int i) {

@@ -44,4 +44,14 @@ public class Point {
 		}
 	}
 	
+	public static boolean isPosInsideMap(Point Point, int xMap, int yMap) {
+		return (Point.getX() < 1 || Point.getX() > xMap ||
+				Point.getY() < 1 || Point.getY() > yMap);
+	}
+	
+	public boolean isPointEqualTo(Point OtherPoint) {
+		return (x == OtherPoint.getX() &&
+				y == OtherPoint.getY());
+	}
+	
 }

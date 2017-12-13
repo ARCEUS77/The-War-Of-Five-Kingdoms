@@ -18,7 +18,7 @@ public class Kingdoms {
 	
 	private int searchKingdomIndex(String kingdomName) {
 		int res = -1;
-		for(int i = 0;i < counter;i++)
+		for(int i = 0;i < counter && res == -1;i++)
 			if(Kingdoms[i].getKingdomName().equals(kingdomName))
 				res = i;
 		
@@ -27,6 +27,10 @@ public class Kingdoms {
 	
 	public Kingdom getKingdom(String kingdomName) {
 		return Kingdoms[searchKingdomIndex(kingdomName)];
+	}
+	
+	public Kingdom getKingdom(int i) {
+		return Kingdoms[i];
 	}
 	
 	public String getConqueredCastleName(int kingdomIndex,int castleIndex) {
