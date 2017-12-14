@@ -418,8 +418,70 @@ public class Main {
 		return G;
 	}
 	
+	private static void printMovementErrorMsg(int error, int x, int y, String type, Kingdom K) {
+		String msg ="";
+		switch(error) {
+		
+		case Game.ALLY_OBSTRUCTION_ERROR_N:
+			msg = "O " + type + " da ilustre casa de " +  K.getKingdomName() + " devia tentar ir para outro sitio.";
+			break;
+			
+		case Game.NON_EXISTANT_SOLDIER_ERROR_N:
+			msg = "Nao existe nenhum soldado ilustre da casa de " + K.getKingdomName() + " na posicao (" + x + "," + y + ").";
+			break;
+			
+		case Game.SOLDIER_OUT_OF_MAP_ERROR_N:
+			msg = "O " + type + " da ilustre casa de " + K.getKingdomName() + " e um cobardolas.";
+		}
+		
+		System.out.println(msg);
+	}
+	
 	private static void processFakeRecruit(Scanner in, Game G) {
 		in.next();
 		in.nextLine();
+	}
+	
+	private static Game processMoveSoldier(Scanner in, Game G) {
+		String type = in.next();
+		int x = in.nextInt();
+		int y = in.nextInt();
+		
+		Kingdom K = G.getKingdom(G.currentTurn());
+		
+		String direction = "";
+		String direction2 = "";
+		String direction3 = "";
+		
+		if(!type.equals(Soldier.KNIGHT)) {
+			direction = in.nextLine();
+			
+			if(G.validMovement(x,y,type,direction,K) == Game.NO_ERRORS)
+				G.moveSoldier(x,y,type,direction,K);
+			else 
+				printMovementErrorMsg(G.validMovement(x,y,type,direction,K),x,y,type,K);
+		 }	
+		else {
+			direction = in.next();
+			direction2 = in.next();
+			direction3 = in.nextLine();
+//			escrever metodo que repete 3 vezes**
+			if(G.validMovement(x,y,type,direction,K) == Game.NO_ERRORS)
+				G.moveSoldier(x,y,type,direction,K);
+			else 
+				printMovementErrorMsg(G.validMovement(x,y,type,direction,K),x,y,type,K);
+			
+			if(G.validMovement(x,y,type,direction2,K) == Game.NO_ERRORS)
+				G.moveSoldier(x,y,type,direction2,K);
+			else 
+				printMovementErrorMsg(G.validMovement(x,y,type,direction2,K),x,y,type,K);
+			
+			if(G.validMovement(x,y,type,direction3,K) == Game.NO_ERRORS)
+				G.moveSoldier(x,y,type,direction3,K);
+			else 
+				printMovementErrorMsg(G.validMovement(x,y,type,direction3,K),x,y,type,K);
+			
+		}
+			
 	}
 }

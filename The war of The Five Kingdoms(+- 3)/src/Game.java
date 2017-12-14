@@ -1,8 +1,4 @@
 
-/**
- * @author Tiago Kebas
- *
- */
 public class Game {
 
 	public static final int MAP_TOO_SMALL_ERROR_N = 1;
@@ -20,6 +16,9 @@ public class Game {
 	public static final int ILLEGAL_CASTLE_INVASION_ERROR_N = 13;
 	public static final int NO_MONEY_FOR_RECRUIT_ERROR_N = 14;
 	public static final int CASTLE_OCCUPIED_BY_SOLDIER_ERROR_N = 15;
+	public static final int NON_EXISTANT_SOLDIER_ERROR_N = 16;
+	public static final int SOLDIER_OUT_OF_MAP_ERROR_N = 17;
+	public static final int ALLY_OBSTRUCTION_ERROR_N = 18;
 	public static final int NO_ERRORS = 0;
 	
 	public static final int FIRST_KINGDOM_TURN = 0;
@@ -142,7 +141,7 @@ public class Game {
 		int res = NO_ERRORS;
 		Point CastlePoint = new Point(x,y);
 			
-		if(Point.isPosInsideMap(CastlePoint,getMaximumMapPoint().getX(),getMaximumMapPoint().getY())) { 
+		if(CastlePoint.isPointOutsideMap(getMaximumMapPoint().getX(),getMaximumMapPoint().getY())) { 
 				res = INVALID_POS_CASTLE_ERROR_N;
 			}
 				
@@ -222,6 +221,21 @@ public class Game {
 		else if(K.getCastle(castleName).isOccupied() && res == NO_ERRORS)
 			res = CASTLE_OCCUPIED_BY_SOLDIER_ERROR_N;
 			
+		return res;
+	}
+	
+	public int validMovement(int x, int y, String type, String direction, Kingdom K) {
+		int res = NO_ERRORS;
+		
+		if(K.getSoldier(x,y,type) == null)
+			res = NON_EXISTANT_SOLDIER_ERROR_N;
+		
+		else if(K.getSoldierPoint(x,y,type).isMovingOutOfMap(maximumMapPoint.getX(),maximumMapPoint.getY(),direction))
+			res = SOLDIER_OUT_OF_MAP_ERROR_N;
+		
+		else if(K.getSoldierPoint(x,y,type).alliedObstruction(direction,K))
+			res = ALLY_OBSTRUCTION_ERROR_N;
+		
 		return res;
 	}
 	
@@ -323,6 +337,10 @@ public class Game {
 	
 	public Kingdom nextOrd() {
 		return Kingdoms.nextOrd();
+	}
+	
+	public void moveSoldier(int x, int y, String type, String direction, Kingdom K) {
+		K.moveSoldier(x,y,type,direction);
 	}
 		
 }

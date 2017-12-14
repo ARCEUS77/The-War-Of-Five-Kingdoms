@@ -49,4 +49,33 @@ public class Army {
 	public int getNSoldiers() {
 		return counter;
 	}
+	
+	private int searchSoldierIndex(int x, int y, String type) {
+		int res = -1;
+		for(int i = 0; i < counter && res == -1; i++) {
+			Soldier s = Army[i];
+			Point p = s.getSoldierPoint();
+			if(p.getX() == x && p.getY() == y && s.getSoldierType().equals(type))
+				res = i;
+		}
+		
+		return res;
+	}
+	
+	private boolean hasSoldier(int x, int y, String type) {
+		return searchSoldierIndex(x,y,type) >= 0;
+	}
+	
+	public Soldier getSoldier(int x, int y, String type) {
+		Soldier s = null;
+		
+		if(hasSoldier(x,y,type))
+			s = Army[searchSoldierIndex(x,y,type)];
+		
+		return s;
+	}
+	
+	public void moveSoldier(int x, int y, String type, String direction) {
+		getSoldier(x,y,type).moveSoldier(direction);
+	}
 }

@@ -100,4 +100,16 @@ public class Kingdom {
 		c.occupyCastle();
 		Army.recruitSoldier(type,c,kingdomName);
 	}
+	
+	public Soldier getSoldier(int x, int y, String type) {
+		return Army.getSoldier(x,y,type);
+	}
+	
+	public Point getSoldierPoint(int x, int y, String type) {
+		return getSoldier(x,y,type).getSoldierPoint();
+	}
+	
+	public void moveSoldier(int x, int y, String type, String direction) {
+		Army.moveSoldier(x, y, type, direction);
+	}
 }

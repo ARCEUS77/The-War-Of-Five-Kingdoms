@@ -26,4 +26,8 @@ public class Soldier {
 	public String soldierKingdom() {
 		return Kingdom;
 	}
+	
+	public void moveSoldier(String direction) {
+		soldierPoint.move(direction);
+	}
 }
