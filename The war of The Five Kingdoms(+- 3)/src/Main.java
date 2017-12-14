@@ -304,7 +304,7 @@ public class Main {
 			else
 				map += G.getKingdomName(i);
 		}
-		
+	
 		return map;
 	}
 	
