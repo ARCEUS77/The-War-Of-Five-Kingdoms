@@ -7,6 +7,7 @@ public class Castle {
 	private String castleName;
 	private String castleKingdomName;
 	private int money;
+	private boolean isOccupied;
 	
 	
 	public Castle(int xCastle, int yCastle,int money, String castleName) {
@@ -14,6 +15,7 @@ public class Castle {
 		this.castleName = castleName;
 		this.money =  money;
 		castleKingdomName = NO_OWNER;
+		isOccupied = false;
 	}
 	
 	public Point getCastlePoint() {
@@ -36,5 +38,31 @@ public class Castle {
 	
 	public void incMoneyTurnC() {
 		money++;
+	}
+	
+	public int recruitCost(String Type) {
+		int cost = 0;
+		if(Type.equals(Soldier.KNIGHT)) {
+			money -= 4;
+			cost = 4;
+		}
+		else {
+			money -= 2;
+			cost = 2;
+		}
+		
+		return cost;
+	}
+	
+	public void occupyCastle() {
+		isOccupied = true;
+	}
+	
+	public void leaveCastle() {
+		isOccupied = false;
+	}
+	
+	public boolean isOccupied(){
+		return isOccupied;	
 	}
 }

@@ -16,6 +16,10 @@ public class Game {
 	public static final int OCCUPIED_CASTLE_ERROR_N = 9;
 	public static final int CASTLE_NON_EXISTANT_ERROR_N = 10;
 	public static final int NOT_ENOUGH_KINGDOMS_ERROR_N = 11;
+	public static final int UNKNOWN_SOLDIER_TYPE_ERROR_N = 12;
+	public static final int ILLEGAL_CASTLE_INVASION_ERROR_N = 13;
+	public static final int NO_MONEY_FOR_RECRUIT_ERROR_N = 14;
+	public static final int CASTLE_OCCUPIED_BY_SOLDIER_ERROR_N = 15;
 	public static final int NO_ERRORS = 0;
 	
 	public static final int FIRST_KINGDOM_TURN = 0;
@@ -190,6 +194,37 @@ public class Game {
 		return res;
 	}
 	
+	public int validRecruit(String type, String castleName, Kingdom K) {
+		int res = NO_ERRORS;
+		
+		switch(type) {
+		
+		case Soldier.KNIGHT:
+			break;
+			
+		case Soldier.LANCER:
+			break;
+			
+		case Soldier.SWORDSMAN:
+			break;
+			
+		default:
+			res = UNKNOWN_SOLDIER_TYPE_ERROR_N;
+		}
+		
+		if(K.getCastle(castleName) == null && res == NO_ERRORS)
+			res = ILLEGAL_CASTLE_INVASION_ERROR_N;
+		
+		else if(K.getCastle(castleName).getMoney() < 2 && !type.equals(Soldier.KNIGHT) ||
+				K.getCastle(castleName).getMoney() < 4 && type.equals(Soldier.KNIGHT)  && res == NO_ERRORS)
+			res = NO_MONEY_FOR_RECRUIT_ERROR_N;
+		
+		else if(K.getCastle(castleName).isOccupied() && res == NO_ERRORS)
+			res = CASTLE_OCCUPIED_BY_SOLDIER_ERROR_N;
+			
+		return res;
+	}
+	
 	public Point getMaximumMapPoint() {
 		return maximumMapPoint;
 	}
@@ -248,6 +283,10 @@ public class Game {
 		return Kingdoms.getKingdom(kingdomName);
 	}
 	
+	public Kingdom getKingdom(int i) {
+		return Kingdoms.getKingdom(i);
+	}
+	
 	public void addCastleToKingdom(String kingdomName, String castleName) {
 		Castles.conquerCastle(castleName,kingdomName);
 		Kingdoms.getKingdom(kingdomName).conquerCastle(Castles.getCastle(castleName));
@@ -255,12 +294,11 @@ public class Game {
 	
 	public void swapTurn() {
 		if(currentKingdomTurn == nKingdoms-1)
-			currentKingdomTurn= FIRST_KINGDOM_TURN;
+			currentKingdomTurn = FIRST_KINGDOM_TURN;
 		else
 			currentKingdomTurn++;
 		
 		Castles.changeTurn();
-		
 	}
 	
 	public int currentTurn() {

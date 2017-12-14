@@ -36,7 +36,7 @@ public class Main {
 	private static final String NO_ARMY_MSG = "Sem exercito.";
 	private static final String UNKNOWN_SOLDIER_TYPE_MSG = "Tipo de soldado inexistente.";
 	private static final String ILLEGAL_CASTLE_INVASION_MSG = "Castelo invadido ilegalmente.";
-	private static final String NO_MONEY_MSG = "Riqueza insuficiente para recrutamento.";
+	private static final String NO_MONEY_FOR_RECRUIT_MSG = "Riqueza insuficiente para recrutamento.";
 	private static final String CASTLE_OCCUPIED_BY_SOLDIER_MSG = "Castelo nao livre.";
 	private static final String END_MSG = "Obrigado por jogar. Ate a proxima.";
 	
@@ -66,7 +66,7 @@ public class Main {
 		if(G == null)
 			System.out.print(PROMPT);
 		else
-			System.out.print(G.getKingdomName(0) + " " + PROMPT);
+			System.out.print(G.getKingdomName(G.currentTurn()) + " " + PROMPT);
 		
 		String cmd = in.next().toLowerCase();
 		
@@ -81,7 +81,7 @@ public class Main {
 		
 		case SOLDIER_MOVE_CMD:;
 		
-		case RECRUIT_CMD:;
+		case RECRUIT_CMD:processFakeRecruit(in,G);
 		
 		case MAP_CMD:;
 		
@@ -110,7 +110,7 @@ public class Main {
 		
 		case SOLDIER_MOVE_CMD:break;
 		
-		case RECRUIT_CMD:break;
+		case RECRUIT_CMD:G = processRecruit(in,G);break;
 		
 		case MAP_CMD: System.out.println(showMap(G));break;
 		
@@ -166,7 +166,19 @@ public class Main {
 			msg = NOT_ENOUGH_KINGDOMS_MSG;break;
 			
 		case Game.OCCUPIED_CASTLE_ERROR_N:
-			msg = OCCUPIED_CASTLE_MSG;
+			msg = OCCUPIED_CASTLE_MSG;break;
+			
+		case Game.ILLEGAL_CASTLE_INVASION_ERROR_N:
+			msg = ILLEGAL_CASTLE_INVASION_MSG;break;
+			
+		case Game.CASTLE_OCCUPIED_BY_SOLDIER_ERROR_N:
+			msg = CASTLE_OCCUPIED_BY_SOLDIER_MSG;break;
+			
+		case Game.NO_MONEY_FOR_RECRUIT_ERROR_N:
+			msg = NO_MONEY_FOR_RECRUIT_MSG;break;
+			
+		case Game.UNKNOWN_SOLDIER_TYPE_ERROR_N:
+			msg = UNKNOWN_SOLDIER_TYPE_MSG;
 			
 		}
 		System.out.println(msg);
@@ -294,8 +306,10 @@ public class Main {
 		
 		G.initializeIterator(Game.CASTLES_IT);
 		
-		while(G.hasNext(Game.CASTLES_IT)) 
-			map += G.nextCastle().getCastleName() + " (" + G.nextCastle().getCastleKingdomName() + ")" + "\n";
+		while(G.hasNext(Game.CASTLES_IT)) {
+			Castle c = G.nextCastle();
+			map += c.getCastleName() + " (" + c.getCastleKingdomName() + ")" + "\n";
+		}
 		
 		map += nKingdoms +" reinos:" + "\n";
 		
@@ -324,8 +338,13 @@ public class Main {
 		if(nCastlesOwned > 0)
 			while(K.hasNextCastle()) {
 				Castle c = K.nextCastle();
-				msg += c.getCastleName() + " com riqueza " + c.getMoney() + 
-						" na posicao(" + c.getCastlePoint().getX() + "," + c.getCastlePoint().getY() + ")" + "\n";
+				if(K.hasNextCastle())
+					msg += c.getCastleName() + " com riqueza " + c.getMoney() + 
+						" na posicao (" + c.getCastlePoint().getX() + "," + c.getCastlePoint().getY() + ")" + "\n";
+				else
+					msg += c.getCastleName() + " com riqueza " + c.getMoney() + 
+					" na posicao (" + c.getCastlePoint().getX() + "," + c.getCastlePoint().getY() + ")";
+					
 			}
 		else
 			msg = NO_CASTLES_MSG;
@@ -334,7 +353,7 @@ public class Main {
 	}
 	
 	private static String showArmy(Game G) {
-		Kingdom K = G.getKingdom(G.getKingdomName(G.currentTurn()));
+		Kingdom K = G.getKingdom(G.currentTurn());
 		int nSoldiers = K.getNSoldiers();
 		String msg = "";
 		
@@ -345,8 +364,12 @@ public class Main {
 		if(nSoldiers > 0)
 			while(K.hasNextSoldier()) {
 				Soldier u = K.nextSoldier();
-				msg += u.getSoldierType() + " na posicao (" +
-					u.getSoldierPoint().getX() + "," + u.getSoldierPoint().getY() + ")" + "\n";
+				if(K.hasNextSoldier())
+					msg += u.getSoldierType() + " na posicao (" +
+							u.getSoldierPoint().getX() + "," + u.getSoldierPoint().getY() + ")" + "\n";
+				else
+					msg += u.getSoldierType() + " na posicao (" +
+							u.getSoldierPoint().getX() + "," + u.getSoldierPoint().getY() + ")";
 			}
 		else
 			msg = NO_ARMY_MSG;
@@ -375,5 +398,28 @@ public class Main {
 		}
 		
 		return msg;
+	}
+	
+	private static Game processRecruit(Scanner in, Game G) {
+		String type = in.next();
+		String castleName = in.nextLine().substring(1);
+		Kingdom K = G.getKingdom(G.currentTurn());
+		
+		if(G.validRecruit(type, castleName, K) == Game.NO_ERRORS) {
+			K.recruit(type, castleName);
+			System.out.println(type + " recrutado no " + castleName +
+					" do reino " + K.getKingdomName() + " por " + K.getCastle(castleName).recruitCost(type) + " moedas.");
+		}
+		else
+			printErrorMsg(G.validRecruit(type, castleName, K));
+
+		G.swapTurn();
+		
+		return G;
+	}
+	
+	private static void processFakeRecruit(Scanner in, Game G) {
+		in.next();
+		in.nextLine();
 	}
 }

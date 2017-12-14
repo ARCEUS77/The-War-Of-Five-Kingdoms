@@ -43,6 +43,10 @@ public class Kingdom {
 		return Castles.getCastle(i);
 	}
 	
+	public Castle getCastle(String castleName) {
+		return Castles.getCastle(castleName);
+	}
+	
 	public int getNSoldiers() {
 		return Army.getNSoldiers();
 	}
@@ -89,5 +93,11 @@ public class Kingdom {
 	
 	public int totalMoney() {
 		return Castles.totalMoney();
+	}
+	
+	public void recruit(String type, String castleName) {
+		Castle c = getCastle(castleName);
+		c.occupyCastle();
+		Army.recruitSoldier(type,c,kingdomName);
 	}
 }
