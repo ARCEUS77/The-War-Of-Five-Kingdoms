@@ -3,11 +3,24 @@ public class Castles {
 
 	private Castle[] Castles;
 	private int counter;
-
+	private int currentCastle;
 	
 	public Castles(int nCastles) {
 		Castles = new Castle[nCastles];
 		counter = 0;
+		currentCastle = -1;
+	}
+	
+	public void initializeIterator() {
+		currentCastle = 0;
+	}
+	
+	public boolean hasNextCastle() {
+		return currentCastle >= 0 && currentCastle < counter;
+	}
+	
+	public Castle nextCastle() {
+		return Castles[currentCastle++];
 	}
 	
 	public void addCastles(int x, int y, int money, String castleName) {
@@ -22,17 +35,19 @@ public class Castles {
 		Castles[searchCastleIndex(castleName)].conquerCastle(kingdomName);
 	}
 	
+	private boolean hasCastle(String castleName) {
+		return searchCastleIndex(castleName) >= 0;
+	}
+	
 	public Castle getCastle(String castleName) {
 		Castle c = null;
-		int index = searchCastleIndex(castleName);
 		
-		if(index == -1)
-			c =  null;
-		else
-			c = Castles[index];
+		if(hasCastle(castleName))
+			c = Castles[searchCastleIndex(castleName)];
 		
 		return c;
 	}
+	
 	
 	public Castle getCastle(int i) {
 		return Castles[i];
@@ -54,8 +69,16 @@ public class Castles {
 		return Castles[i].getMoney();
 	}
 	
-	public void SwapTurn() {
+	public void changeTurn() {
 		for(int i = 0; i < counter; i++)
-			Castles[i].changeTurn();
+			Castles[i].incMoneyTurnC();
+	}
+	
+	public int totalMoney() {
+		int res = 0;
+		for(int i = 0; i < counter; i++)
+			res  += Castles[i].getMoney();
+		
+		return res;
 	}
 }

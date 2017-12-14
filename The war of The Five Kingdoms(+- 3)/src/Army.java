@@ -4,10 +4,23 @@ public class Army {
 	private static final int GROWTH_FACTOR = 2;
 	private Soldier[] Army;
 	private int counter;
+	private int currentSoldier;
 	
 	public Army() {
 		Army =  new Soldier[DEFAULT_SIZE];
 		counter = 0;
+	}
+	
+	public void initializeIterator() {
+		currentSoldier = 0;
+	}
+	
+	public boolean hasNextSoldier() {
+		return currentSoldier >= 0 && currentSoldier < counter;
+	}
+	
+	public Soldier nextSoldier() {
+		return Army[currentSoldier++];
 	}
 	
 	private void resize() {
@@ -30,7 +43,7 @@ public class Army {
 		if(isFull())
 			resize();
 		
-		Army[counter] = new Soldier(soldierType,castle,Kingdomname);
+		Army[counter++] = new Soldier(soldierType,castle,Kingdomname);
 	}
 	
 	public int getNSoldiers() {

@@ -118,7 +118,7 @@ public class Main {
 		
 		case ARMY_CMD:System.out.println(showArmy(G));break;
 		
-		case KINGDOM_CMD:break;
+		case KINGDOM_CMD:System.out.println(showKingdoms(G));break;
 		
 		case HELP_CMD:System.out.println(Help(G));break;
 			
@@ -288,21 +288,25 @@ public class Main {
 		int ymap = G.getMaximumMapPoint().getY();
 		int nCastles = G.getNCastles();
 		int nKingdoms =  G.getNKingdoms();
-		
+
 		map = xmap + " " + ymap + "\n" + 
 			nCastles + " castelos:" + "\n";
 		
-		for(int k = 0; k < nCastles; k++) {
-			map += G.getCastleName(k) + " (" + G.getCastleKingdomName(k) + ")" + "\n";
-		}
+		G.initializeIterator(Game.CASTLES_IT);
 		
-		map += nKingdoms + " reinos:" + "\n";
+		while(G.hasNext(Game.CASTLES_IT)) 
+			map += G.nextCastle().getCastleName() + " (" + G.nextCastle().getCastleKingdomName() + ")" + "\n";
 		
-		for(int i = 0; i < nKingdoms; i++) {
-			if(i < nKingdoms-1)
-				map += G.getKingdomName(i) + "; ";
+		map += nKingdoms +" reinos:" + "\n";
+		
+		G.initializeIterator(Game.KINGDOMS_IT);
+		
+		while(G.hasNext(Game.KINGDOMS_IT)) {
+			Kingdom k =  G.nextKingdom();
+			if(G.hasNext(Game.KINGDOMS_IT))
+				map += k.getKingdomName() + "; "; 
 			else
-				map += G.getKingdomName(i);
+				map += k.getKingdomName();
 		}
 	
 		return map;
@@ -313,29 +317,37 @@ public class Main {
 		int nCastlesOwned = K.getNOwnedCastles();
 		String msg = "";
 		
-		if(nCastlesOwned > 0) {
-			System.out.println(nCastlesOwned + " castelos:");
-			for(int i = 0; i < nCastlesOwned; i++) 
-				msg += K.getConqueredCastleName(i) + " com riqueza " + K.getCastle(i).getMoney() + 
-					" na posicao (" + K.getCastle(i).getCastlePoint().getX() + "," + K.getCastle(i).getCastlePoint().getY() + ")";
-		}
+		msg += nCastlesOwned + " castelos:" + "\n";
+		
+		K.initializeCastleIterator();
+		
+		if(nCastlesOwned > 0)
+			while(K.hasNextCastle()) {
+				Castle c = K.nextCastle();
+				msg += c.getCastleName() + " com riqueza " + c.getMoney() + 
+						" na posicao(" + c.getCastlePoint().getX() + "," + c.getCastlePoint().getY() + ")" + "\n";
+			}
 		else
 			msg = NO_CASTLES_MSG;
-		
+					
 		return msg;
 	}
 	
 	private static String showArmy(Game G) {
 		Kingdom K = G.getKingdom(G.getKingdomName(G.currentTurn()));
-		int nSoldiers = K.getNSodiers();
+		int nSoldiers = K.getNSoldiers();
 		String msg = "";
 		
-		if(nSoldiers > 0 ) {
-			System.out.println(nSoldiers + " soldados:");
-			for(int i = 0; i < nSoldiers; i++) 
-				msg += K.getSoldier(i).getSoldierType() + " na posicao (" +
-						K.getSoldier(i).getSoldierPoint().getX() + "," + K.getSoldier(i).getSoldierPoint().getY() + ")";	
-		}
+		msg += nSoldiers + " soldados:" + "\n";
+		
+		K.initializeArmyIterator();
+		
+		if(nSoldiers > 0)
+			while(K.hasNextSoldier()) {
+				Soldier u = K.nextSoldier();
+				msg += u.getSoldierType() + " na posicao (" +
+					u.getSoldierPoint().getX() + "," + u.getSoldierPoint().getY() + ")" + "\n";
+			}
 		else
 			msg = NO_ARMY_MSG;
 		
@@ -343,4 +355,25 @@ public class Main {
 			
 	}
 	
+	private static String showKingdoms(Game G) {
+		String msg = "";
+		int nKingdoms = G.nActiveKingdoms();
+		
+		msg += nKingdoms + " reinos:" + "\n";
+		
+		
+		G.initializeOrdIterator();
+		
+		while(G.hasNextOrd()) {
+			Kingdom K = G.nextOrd();
+			if(G.hasNextOrd())
+				msg += K.getKingdomName() + ", " + K.getNOwnedCastles() + " castelos, " + K.getNSoldiers() + " soldados, " +
+					K.totalMoney() + " de riqueza" + "\n";
+			else
+				msg += K.getKingdomName() + ", " + K.getNOwnedCastles() + " castelos," + " " + K.getNSoldiers() + " soldados, " +
+						K.totalMoney() + " de riqueza";
+		}
+		
+		return msg;
+	}
 }

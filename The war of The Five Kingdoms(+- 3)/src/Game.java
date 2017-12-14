@@ -31,6 +31,9 @@ public class Game {
 	public static final int MINIMUM_KINGDOMS = 2;
 	public static final int MAXIMUM_KINGDOMS = 8;
 	
+	public static final int KINGDOMS_IT = 0;
+	public static final int CASTLES_IT = 1;
+	
 	private Kingdoms Kingdoms;
 	private Castles Castles;
 	private Point maximumMapPoint;
@@ -58,6 +61,45 @@ public class Game {
 	public void updateNCastlesNKingdoms(int nCastles, int nKingdoms) {
 		this.nCastles = nCastles;
 		this.nKingdoms = nKingdoms;
+	}
+	
+	public void initializeIterator(int type) {
+		
+		if(type == KINGDOMS_IT)
+			Kingdoms.initializeIterator();
+		else
+			Castles.initializeIterator();
+	}
+	
+	public void initializeArmyIterator(String kingdomName) {
+		Kingdoms.initializeArmyIterator(kingdomName);
+	}
+	
+	public boolean hasNext(int type) {
+		boolean res = false;
+		
+		if(type == KINGDOMS_IT)
+			res = Kingdoms.hasNextKingdom();
+		else
+			res = Castles.hasNextCastle();
+		
+		return res;
+	}
+	
+	public boolean hasNextSoldier(String kingdomName) {
+		return Kingdoms.hasNextSoldier(kingdomName);
+	}
+	
+	public Kingdom nextKingdom() {
+		return Kingdoms.nextKingdom();
+	}
+	
+	public Castle nextCastle() {
+		return Castles.nextCastle();
+	}
+	
+	public Soldier nextSoldier(String kingdomName) {
+		return Kingdoms.nextSoldier(kingdomName);
 	}
 	
 	/**
@@ -217,7 +259,7 @@ public class Game {
 		else
 			currentKingdomTurn++;
 		
-		Castles.SwapTurn();
+		Castles.changeTurn();
 		
 	}
 	
@@ -227,6 +269,22 @@ public class Game {
 	
 	public int nOwnedCastles(int Kingdom) {
 		return Kingdoms.getKingdom(Kingdom).getNOwnedCastles();
+	}
+	
+	public int nActiveKingdoms() {
+		return Kingdoms.nActiveKingdoms();
+	}
+	
+	public void initializeOrdIterator() {
+		Kingdoms.initializeOrdIterator();
+	}
+	
+	public boolean hasNextOrd() {
+		return Kingdoms.hasNextOrd();
+	}
+	
+	public Kingdom nextOrd() {
+		return Kingdoms.nextOrd();
 	}
 		
 }
