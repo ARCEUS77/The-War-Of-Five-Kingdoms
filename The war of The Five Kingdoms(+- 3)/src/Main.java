@@ -313,7 +313,7 @@ public class Main {
 		int nCastlesOwned = K.getNOwnedCastles();
 		String msg = "";
 		
-		if(nCastlesOwned <0) {
+		if(nCastlesOwned > 0) {
 			System.out.println(nCastlesOwned + " castelos:");
 			for(int i = 0; i < nCastlesOwned; i++) 
 				msg += K.getConqueredCastleName(i) + " com riqueza " + K.getCastle(i).getMoney() + 
