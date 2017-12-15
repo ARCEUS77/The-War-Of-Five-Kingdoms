@@ -20,6 +20,8 @@ public class Game {
 	public static final int SOLDIER_OUT_OF_MAP_ERROR_N = 17;
 	public static final int ALLY_OBSTRUCTION_ERROR_N = 18;
 	public static final int NO_ERRORS = 0;
+	public static final int NO_MOVEMENT_MSG_N = 0;
+	public static final int CONQUERED_CASTLE_MSG_N = 1;
 	
 	public static final int FIRST_KINGDOM_TURN = 0;
 	public static final int SECOND_KINGDOM_TURN = 1;
@@ -298,6 +300,14 @@ public class Game {
 		return Kingdoms.getKingdom(i);
 	}
 	
+	public Castle getCastle(int x,int y) {
+		return Castles.getCastle(x,y);
+	}
+	
+	public boolean hasCastle(int x, int y) {
+		return Castles.getCastle(x,y) != null;
+	}
+	
 	public void addCastleToKingdom(String kingdomName, String castleName) {
 		Castles.conquerCastle(castleName,kingdomName);
 		Kingdoms.getKingdom(kingdomName).conquerCastle(Castles.getCastle(castleName));
@@ -337,7 +347,42 @@ public class Game {
 	}
 	
 	public void moveSoldier(int x, int y, String direction, Kingdom K) {
+		
+		for(int i = 0; i < K.getNOwnedCastles(); i++) {
+			Point c = K.getCastle(i).getCastlePoint();
+			if(x == c.getX() && y == c.getY())
+				K.getCastle(i).leaveCastle();
+		}
+		
 		K.moveSoldier(x,y,direction);
+	}
+	
+	public int movementMsg(Soldier S, Kingdom K) {
+		int msg = NO_MOVEMENT_MSG_N;
+		int x = S.getSoldierPoint().getX();
+		int y = S.getSoldierPoint().getY();
+		
+		for(int i = 0; i < getNCastles(); i++) {
+			Castle castle = Castles.getCastle(i);
+			Point c = castle.getCastlePoint();
+			if(x == c.getX() && y == c.getY())
+				if(!castle.getCastleKingdomName().equals(K.getKingdomName())) {
+					addCastleToKingdom(K.getKingdomName(), castle.getCastleName());
+					castle.occupyCastle();
+					msg = CONQUERED_CASTLE_MSG_N; 
+				}
+			
+			else 
+				castle.occupyCastle();
+		}
+		
+		return msg;
+	}
+	
+	public void recruit(String type, String castleName, Kingdom K) {
+		Castle c = Castles.getCastle(castleName);
+		c.occupyCastle();
+		K.recruit(type,castleName);
 	}
 		
 }

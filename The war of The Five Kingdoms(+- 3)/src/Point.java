@@ -54,9 +54,7 @@ public class Point {
 	
 	public boolean isMovingOutOfMap(int xmap, int ymap, String direction) {
 		Point temp = new Point(x,y);
-		System.out.println("before move " +temp.getX() + " " + temp.getY());
 		temp.move(direction);
-		System.out.println(xmap + " " + ymap + " after move (" + temp.getX() + "," + temp.getY() + ")");
 		
 		return temp.isPointOutsideMap(xmap,ymap);
 	}

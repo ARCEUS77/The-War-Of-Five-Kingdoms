@@ -20,11 +20,6 @@ public class Kingdom {
 		return kingdomName;
 	}
 	
-	public void recruitUnit(String soldierType, Castle castle) {
-		Army.recruitSoldier(soldierType, castle,kingdomName);
-
-	}
-	
 	public void conquerCastle(Castle c) {
 		Castles.addCastles(c);
 		Castles.getCastle(c.getCastleName());

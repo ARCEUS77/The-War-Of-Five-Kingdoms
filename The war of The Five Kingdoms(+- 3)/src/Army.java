@@ -24,7 +24,7 @@ public class Army {
 	}
 	
 	private void resize() {
-		Soldier[] tmp = new Soldier[GROWTH_FACTOR*DEFAULT_SIZE];
+		Soldier[] tmp = new Soldier[GROWTH_FACTOR*counter];
 		for(int i = 0; i<counter; i++) 
 			tmp[i] = Army[i];
 		
@@ -36,7 +36,7 @@ public class Army {
 	}
 	
 	private boolean isFull() {
-		return counter==Army.length;
+		return counter == Army.length;
 	}
 	
 	public void recruitSoldier(String soldierType, Castle castle, String Kingdomname) {

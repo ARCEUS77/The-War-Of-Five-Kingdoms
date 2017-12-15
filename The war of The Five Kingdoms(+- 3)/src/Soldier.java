@@ -9,6 +9,7 @@ public class Soldier {
 	private Point soldierPoint;
 	private String Kingdom;
 	
+	
 	public Soldier(String soldierType,Castle castle, String Kingdom) {
 		this.soldierType = soldierType;
 		soldierPoint = new Point(castle.getCastlePoint().getX(),castle.getCastlePoint().getY());

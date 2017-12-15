@@ -406,7 +406,7 @@ public class Main {
 		Kingdom K = G.getKingdom(G.currentTurn());
 		
 		if(G.validRecruit(type, castleName, K) == Game.NO_ERRORS) {
-			K.recruit(type, castleName);
+			G.recruit(type,castleName,K);
 			System.out.println(type + " recrutado no " + castleName +
 					" do reino " + K.getKingdomName() + " por " + K.getCastle(castleName).recruitCost(type) + " moedas.");
 		}
@@ -433,8 +433,21 @@ public class Main {
 		case Game.SOLDIER_OUT_OF_MAP_ERROR_N:
 			msg = "O " + type + " da ilustre casa de " + K.getKingdomName() + " e um cobardolas.";
 		}
-		
 		System.out.println(msg);
+	}
+	
+	private static void printMovementMsg(int msgN, Soldier S, Kingdom K,Castle C, Game G) {
+		String msg = "";
+	
+		switch(msgN) {
+		
+		case Game.CONQUERED_CASTLE_MSG_N:
+			msg = "O " + S.getSoldierType() + " da ilustre casa de " + K.getKingdomName() + " adquiriu um novo castelo " + C.getCastleName() + " para o seu reino.";
+			break;
+		}
+		
+		if(!msg.equals(""))
+			System.out.println(msg);
 	}
 	
 	private static void processFakeRecruit(Scanner in, Game G) {
@@ -455,28 +468,36 @@ public class Main {
 	
 	private static Game processKnightMovement(Scanner in, Game G, int x, int y, Kingdom K) {
 		String direction = "";
+		Castle c = null;
 		for(int i = 0; i < 3; i++) {
-		 if(i == 2) {
+		 if(i == 2) 
 			direction = in.nextLine().substring(1);
-			System.out.println(direction);
-		 }
 		 
-		 else {
-			 direction = in.next().trim();
-			 System.out.println(direction);
-		 }
-		 
-		 
+		 else 
+			 direction = in.next();
+
 		 if(G.validMovement(x,y,direction,K) == Game.NO_ERRORS) {
 			 	Soldier S = K.getSoldier(x,y);
+			 	
 			 	G.moveSoldier(x,y,direction,K);
+			 	
 			 	x = updateXY(S,"x");
 			 	y = updateXY(S,"y");
+			 	
+			 	Soldier Snext = K.getSoldier(x,y);
+			 	
+			 	if(G.hasCastle(x, y))
+			 		c = G.getCastle(x,y);
+			 	
+			 	printMovementMsg(G.movementMsg(Snext,K),K.getSoldier(x,y),K,c,G);
+			 	
 			 	System.out.println(K.getKingdomName() + " " + S.getSoldierType() + " (" + S.getSoldierPoint().getX() + "," + S.getSoldierPoint().getY() + ")");
 		 }
 		 
-		 else 
+		 else {
 			printMovementErrorMsg(G.validMovement(x,y,direction,K),x,y,Soldier.KNIGHT,K);
+			System.out.println(K.getKingdomName() + " " + K.getSoldier(x,y).getSoldierType() + " (" + K.getSoldier(x,y).getSoldierPoint().getX() + "," + K.getSoldier(x,y).getSoldierPoint().getY() + ")");
+		 	}
 		 }	
 		
 		return G;
@@ -484,17 +505,31 @@ public class Main {
 	
 	private static Game processNonKnightMovement(Scanner in, Game G, int x, int y, String type, Kingdom K) {
 		
-		String direction = in.nextLine();
-		System.out.println(direction);
-		
+		String direction = in.next();
+		in.nextLine();
+		Castle c = null;
 		
 		if(G.validMovement(x,y,direction,K) == Game.NO_ERRORS) {
+			Soldier S = K.getSoldier(x,y);
+		 	
 		 	G.moveSoldier(x,y,direction,K);
-		 	Soldier S = K.getSoldier(x,y);
-		 	System.out.println(K.getKingdomName() + " " + S.getSoldierType() + " (" + S.getSoldierPoint().getX() + "," + S.getSoldierPoint().getY() + ")");
+		 	
+		 	x = updateXY(S,"x");
+		 	y = updateXY(S,"y");
+		 	
+		 	Soldier Snext = K.getSoldier(x,y);
+		 	
+		 	if(G.hasCastle(x, y))
+		 		c = G.getCastle(x,y);
+		 	
+		 	printMovementMsg(G.movementMsg(Snext,K),K.getSoldier(x,y),K,c,G);
+		 	
+		 	System.out.println(K.getKingdomName() + " " + S.getSoldierType() + " (" + x + "," + y + ")");
 		}
-		else  
+		else  {
 			printMovementErrorMsg(G.validMovement(x,y,direction,K),x,y,type,K);
+			System.out.println(K.getKingdomName() + " " + K.getSoldier(x,y).getSoldierType() + " (" + x + "," + y + ")");
+		}
 		
 		return G;
 	}
@@ -503,10 +538,15 @@ public class Main {
 		int counter = 0;
 		in.next();
 		while(counter < 2) {
-			if(in.hasNext() && counter != 1) 
+			if(!in.hasNextLine()) {
 				in.next();
-			else
+			counter++;
+			}
+				
+			else {
+				counter = 2;
 				in.nextLine();
+			}
 		}
 	}
 	
