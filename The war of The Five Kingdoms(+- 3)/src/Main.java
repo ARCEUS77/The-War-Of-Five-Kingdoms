@@ -108,7 +108,7 @@ public class Main {
 		
 		case NEW_GAME_CMD: G = processNewGame(in,G);break;
 		
-		case SOLDIER_MOVE_CMD:break;
+		case SOLDIER_MOVE_CMD:G  = processMoveSoldier(in,G);break;
 		
 		case RECRUIT_CMD:G = processRecruit(in,G);break;
 		
@@ -442,46 +442,96 @@ public class Main {
 		in.nextLine();
 	}
 	
+	private static int updateXY(Soldier S, String coord) {
+		int res = 0;
+		
+		if(coord.equals("x"))
+			res += S.getSoldierPoint().getX();
+		else
+			res += S.getSoldierPoint().getY();
+		
+		return res;	
+	}
+	
+	private static Game processKnightMovement(Scanner in, Game G, int x, int y, Kingdom K) {
+		String direction = "";
+		for(int i = 0; i < 3; i++) {
+		 if(i == 2) {
+			direction = in.nextLine().substring(1);
+			System.out.println(direction);
+		 }
+		 
+		 else {
+			 direction = in.next().trim();
+			 System.out.println(direction);
+		 }
+		 
+		 
+		 if(G.validMovement(x,y,direction,K) == Game.NO_ERRORS) {
+			 	Soldier S = K.getSoldier(x,y);
+			 	G.moveSoldier(x,y,direction,K);
+			 	x = updateXY(S,"x");
+			 	y = updateXY(S,"y");
+			 	System.out.println(K.getKingdomName() + " " + S.getSoldierType() + " (" + S.getSoldierPoint().getX() + "," + S.getSoldierPoint().getY() + ")");
+		 }
+		 
+		 else 
+			printMovementErrorMsg(G.validMovement(x,y,direction,K),x,y,Soldier.KNIGHT,K);
+		 }	
+		
+		return G;
+	}
+	
+	private static Game processNonKnightMovement(Scanner in, Game G, int x, int y, String type, Kingdom K) {
+		
+		String direction = in.nextLine();
+		System.out.println(direction);
+		
+		
+		if(G.validMovement(x,y,direction,K) == Game.NO_ERRORS) {
+		 	G.moveSoldier(x,y,direction,K);
+		 	Soldier S = K.getSoldier(x,y);
+		 	System.out.println(K.getKingdomName() + " " + S.getSoldierType() + " (" + S.getSoldierPoint().getX() + "," + S.getSoldierPoint().getY() + ")");
+		}
+		else  
+			printMovementErrorMsg(G.validMovement(x,y,direction,K),x,y,type,K);
+		
+		return G;
+	}
+	
+	private static void processFakeMovement(Scanner in) {
+		int counter = 0;
+		in.next();
+		while(counter < 2) {
+			if(in.hasNext() && counter != 1) 
+				in.next();
+			else
+				in.nextLine();
+		}
+	}
+	
 	private static Game processMoveSoldier(Scanner in, Game G) {
-		String type = in.next();
 		int x = in.nextInt();
 		int y = in.nextInt();
 		
+		
+		String type = "";
+		
 		Kingdom K = G.getKingdom(G.currentTurn());
 		
-		String direction = "";
-		String direction2 = "";
-		String direction3 = "";
-		
-		if(!type.equals(Soldier.KNIGHT)) {
-			direction = in.nextLine();
-			
-			if(G.validMovement(x,y,type,direction,K) == Game.NO_ERRORS)
-				G.moveSoldier(x,y,type,direction,K);
-			else 
-				printMovementErrorMsg(G.validMovement(x,y,type,direction,K),x,y,type,K);
-		 }	
-		else {
-			direction = in.next();
-			direction2 = in.next();
-			direction3 = in.nextLine();
-//			escrever metodo que repete 3 vezes**
-			if(G.validMovement(x,y,type,direction,K) == Game.NO_ERRORS)
-				G.moveSoldier(x,y,type,direction,K);
-			else 
-				printMovementErrorMsg(G.validMovement(x,y,type,direction,K),x,y,type,K);
-			
-			if(G.validMovement(x,y,type,direction2,K) == Game.NO_ERRORS)
-				G.moveSoldier(x,y,type,direction2,K);
-			else 
-				printMovementErrorMsg(G.validMovement(x,y,type,direction2,K),x,y,type,K);
-			
-			if(G.validMovement(x,y,type,direction3,K) == Game.NO_ERRORS)
-				G.moveSoldier(x,y,type,direction3,K);
-			else 
-				printMovementErrorMsg(G.validMovement(x,y,type,direction3,K),x,y,type,K);
-			
+		if(K.getSoldierType(x,y).equals("")) {
+			processFakeMovement(in);
+			printMovementErrorMsg(Game.NON_EXISTANT_SOLDIER_ERROR_N,x,y,type,K);
 		}
+		
+		else if(!K.getSoldierType(x,y).equals(Soldier.KNIGHT))
+			processNonKnightMovement(in,G,x,y,K.getSoldierType(x,y),K);
+		
+		else if(K.getSoldierType(x,y).equals(Soldier.KNIGHT)) 
+			processKnightMovement(in,G,x,y,K);
+		
+		G.swapTurn();
 			
+		return G;	
 	}
 }

@@ -40,12 +40,11 @@ public class Point {
 			
 		case WEST:
 			x--;
-			break;
 		}
 	}
 	
 	public  boolean isPointOutsideMap(int xMap, int yMap) {
-		return (x < 1 || x > xMap || y < 1 || y> yMap);
+		return (x < 1 || x > xMap || y < 1 || y > yMap);
 	}
 	
 	public boolean isPointEqualTo(Point OtherPoint) {
@@ -55,9 +54,11 @@ public class Point {
 	
 	public boolean isMovingOutOfMap(int xmap, int ymap, String direction) {
 		Point temp = new Point(x,y);
+		System.out.println("before move " +temp.getX() + " " + temp.getY());
 		temp.move(direction);
+		System.out.println(xmap + " " + ymap + " after move (" + temp.getX() + "," + temp.getY() + ")");
 		
-		return temp.isPointOutsideMap(xmap, ymap);
+		return temp.isPointOutsideMap(xmap,ymap);
 	}
 	
 	public boolean alliedObstruction(String direction, Kingdom K) {

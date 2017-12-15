@@ -224,16 +224,13 @@ public class Game {
 		return res;
 	}
 	
-	public int validMovement(int x, int y, String type, String direction, Kingdom K) {
+	public int validMovement(int x, int y, String direction, Kingdom K) {
 		int res = NO_ERRORS;
 		
-		if(K.getSoldier(x,y,type) == null)
-			res = NON_EXISTANT_SOLDIER_ERROR_N;
-		
-		else if(K.getSoldierPoint(x,y,type).isMovingOutOfMap(maximumMapPoint.getX(),maximumMapPoint.getY(),direction))
+		if(K.getSoldierPoint(x,y).isMovingOutOfMap(maximumMapPoint.getX(),maximumMapPoint.getY(),direction))
 			res = SOLDIER_OUT_OF_MAP_ERROR_N;
 		
-		else if(K.getSoldierPoint(x,y,type).alliedObstruction(direction,K))
+		else if(K.getSoldierPoint(x,y).alliedObstruction(direction,K))
 			res = ALLY_OBSTRUCTION_ERROR_N;
 		
 		return res;
@@ -339,8 +336,8 @@ public class Game {
 		return Kingdoms.nextOrd();
 	}
 	
-	public void moveSoldier(int x, int y, String type, String direction, Kingdom K) {
-		K.moveSoldier(x,y,type,direction);
+	public void moveSoldier(int x, int y, String direction, Kingdom K) {
+		K.moveSoldier(x,y,direction);
 	}
 		
 }

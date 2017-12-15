@@ -50,32 +50,31 @@ public class Army {
 		return counter;
 	}
 	
-	private int searchSoldierIndex(int x, int y, String type) {
+	private int searchSoldierIndex(int x, int y) {
 		int res = -1;
 		for(int i = 0; i < counter && res == -1; i++) {
-			Soldier s = Army[i];
-			Point p = s.getSoldierPoint();
-			if(p.getX() == x && p.getY() == y && s.getSoldierType().equals(type))
+			Point p = Army[i].getSoldierPoint();
+			if(p.getX() == x && p.getY() == y)
 				res = i;
 		}
 		
 		return res;
 	}
 	
-	private boolean hasSoldier(int x, int y, String type) {
-		return searchSoldierIndex(x,y,type) >= 0;
+	private boolean hasSoldier(int x, int y) {
+		return searchSoldierIndex(x,y) >= 0;
 	}
 	
-	public Soldier getSoldier(int x, int y, String type) {
+	public Soldier getSoldier(int x, int y) {
 		Soldier s = null;
 		
-		if(hasSoldier(x,y,type))
-			s = Army[searchSoldierIndex(x,y,type)];
+		if(hasSoldier(x,y))
+			s = Army[searchSoldierIndex(x,y)];
 		
 		return s;
 	}
 	
-	public void moveSoldier(int x, int y, String type, String direction) {
-		getSoldier(x,y,type).moveSoldier(direction);
+	public void moveSoldier(int x, int y, String direction) {
+		getSoldier(x,y).moveSoldier(direction);
 	}
 }

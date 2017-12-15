@@ -101,15 +101,24 @@ public class Kingdom {
 		Army.recruitSoldier(type,c,kingdomName);
 	}
 	
-	public Soldier getSoldier(int x, int y, String type) {
-		return Army.getSoldier(x,y,type);
+	public Soldier getSoldier(int x, int y) {
+		return Army.getSoldier(x,y);
 	}
 	
-	public Point getSoldierPoint(int x, int y, String type) {
-		return getSoldier(x,y,type).getSoldierPoint();
+	public Point getSoldierPoint(int x, int y) {
+		return getSoldier(x,y).getSoldierPoint();
 	}
 	
-	public void moveSoldier(int x, int y, String type, String direction) {
-		Army.moveSoldier(x, y, type, direction);
+	public void moveSoldier(int x, int y, String direction) {
+		Army.moveSoldier(x,y,direction);
+	}
+	
+	public String getSoldierType(int x, int y) {
+		String type = "";
+		
+		if(getSoldier(x,y) != null) 
+			type = getSoldier(x,y).getSoldierType();
+		
+		return type;
 	}
 }
