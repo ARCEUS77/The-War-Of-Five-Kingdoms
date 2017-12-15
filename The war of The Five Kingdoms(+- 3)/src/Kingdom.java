@@ -116,4 +116,12 @@ public class Kingdom {
 		
 		return type;
 	}
+	
+	public boolean hasSoldier(int x, int y) {
+		return Army.hasSoldier(x,y);
+	}
+	
+	public void KillSoldier(Soldier S) {
+		Army.removeSoldier(S);
+	}
 }

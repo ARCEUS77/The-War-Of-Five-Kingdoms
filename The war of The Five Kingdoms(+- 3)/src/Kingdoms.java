@@ -51,6 +51,10 @@ public class Kingdoms {
 		return Kingdoms[i];
 	}
 	
+	public Soldier getSoldier(int x,int y, Kingdom k) {
+		return k.getSoldier(x,y);
+	}
+	
 	public String getConqueredCastleName(int kingdomIndex,int castleIndex) {
 		return Kingdoms[kingdomIndex].getConqueredCastleName(castleIndex);
 	}

@@ -304,8 +304,36 @@ public class Game {
 		return Castles.getCastle(x,y);
 	}
 	
+	public Soldier getSoldier(int x, int y, Kingdom K) {
+		Soldier S = null;
+		for(int k = 0; k < nKingdoms; k++) {
+			if(Kingdoms.getKingdom(k).getKingdomName().equals(K.getKingdomName())) {
+					Kingdom KK = Kingdoms.getKingdom(k);
+			for(int i = 0; i< KK.getNSoldiers() && S == null; i++) {
+				Point PI = KK.getSoldier(i).getSoldierPoint();
+					if(PI.getX() == x && PI.getY() == y)
+						S = KK.getSoldier(i);
+				}
+			}
+		}
+		
+		return S;
+	}
+	
 	public boolean hasCastle(int x, int y) {
 		return Castles.getCastle(x,y) != null;
+	}
+	
+	public boolean hasSoldier(int x, int y, Kingdom K) {
+		boolean res = false;
+		
+		for(int i = 0; i< nKingdoms && res == false; i++) {
+		if(Kingdoms.getKingdom(i).hasSoldier(x,y) && !Kingdoms.getKingdom(i).getKingdomName().equals(K.getKingdomName()))
+			res = true;
+		}
+		
+		return res;
+		
 	}
 	
 	public void addCastleToKingdom(String kingdomName, String castleName) {
@@ -359,6 +387,7 @@ public class Game {
 	
 	public int movementMsg(Soldier S, Kingdom K) {
 		int msg = NO_MOVEMENT_MSG_N;
+		
 		int x = S.getSoldierPoint().getX();
 		int y = S.getSoldierPoint().getY();
 		
@@ -367,15 +396,28 @@ public class Game {
 			Point c = castle.getCastlePoint();
 			if(x == c.getX() && y == c.getY())
 				if(!castle.getCastleKingdomName().equals(K.getKingdomName())) {
-					addCastleToKingdom(K.getKingdomName(), castle.getCastleName());
+					addCastleToKingdom(K.getKingdomName(),castle.getCastleName());
 					castle.occupyCastle();
 					msg = CONQUERED_CASTLE_MSG_N; 
 				}
-			
 			else 
 				castle.occupyCastle();
 		}
 		
+		for(int i = 0; i < nKingdoms; i++) {
+			for(int j = 0; j < Kingdoms.getKingdom(i).getNSoldiers(); j++) {
+				if(!Kingdoms.getKingdom(i).getKingdomName().equals(K.getKingdomName())) {
+					Kingdom ki = Kingdoms.getKingdom(i);
+					Soldier enemy = ki.getSoldier(j);
+					Point si = enemy.getSoldierPoint();
+					if(x == si.getX() && y == si.getY()) {
+						msg = S.fightResult(enemy.getSoldierType());
+						
+					}
+				}
+			}
+		}
+			
 		return msg;
 	}
 	
@@ -383,6 +425,10 @@ public class Game {
 		Castle c = Castles.getCastle(castleName);
 		c.occupyCastle();
 		K.recruit(type,castleName);
+	}
+	
+	public void updateSoldierDeaths(Soldier Sdead, Kingdom Kdead) {
+		Kdead.KillSoldier(Sdead);
 	}
 		
 }

@@ -11,6 +11,17 @@ public class Army {
 		counter = 0;
 	}
 	
+	public void removeSoldier(Soldier S) {
+		int index = -1;
+		for(int i = 0; i < counter; i++)
+			if(S.soldierKingdom().equals(Army[i].soldierKingdom()) && S.getSoldierPoint().equals(Army[i].getSoldierPoint()))
+				index = i;
+		
+		Army[index] = Army[counter-1];
+		counter--;
+			
+	}
+	
 	public void initializeIterator() {
 		currentSoldier = 0;
 	}
@@ -61,7 +72,7 @@ public class Army {
 		return res;
 	}
 	
-	private boolean hasSoldier(int x, int y) {
+	public boolean hasSoldier(int x, int y) {
 		return searchSoldierIndex(x,y) >= 0;
 	}
 	

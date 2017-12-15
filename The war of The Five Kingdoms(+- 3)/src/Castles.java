@@ -64,7 +64,7 @@ public class Castles {
 	
 	private int searchCastleIndex(int x, int y) {
 		int res = -1;
-		for(int i = 0; i < counter; i++) {
+		for(int i = 0; i < counter && res == -1; i++) {
 			Point P = Castles[i].getCastlePoint();
 			if(P.getX() == x && P.getY() == y)
 				res = i;
